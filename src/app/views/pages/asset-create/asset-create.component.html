@@ -1,0 +1,135 @@
+<form cForm [formGroup]="assetForm" (ngSubmit)="onSubmit()">
+    <c-card>
+        <c-card-header>
+            <strong>Create Asset</strong>
+        </c-card-header>
+        <c-card-body>
+            <c-row>
+                <!-- Left Column -->
+                <c-col [lg]>
+                    <!-- Name -->
+                    <div class="mb-3">
+                        <label cLabel for="name">Name</label>
+                        <input cFormControl id="name" type="text" placeholder="Enter asset name"
+                            formControlName="name" />
+                    </div>
+
+                    <!-- Symbol -->
+                    <div class="mb-3">
+                        <label cLabel for="symbol">Symbol</label>
+                        <input cFormControl id="symbol" type="text" placeholder="Enter symbol"
+                            formControlName="symbol" />
+                    </div>
+
+                    <!-- Asset Type -->
+                    <div class="mb-3">
+                        <label cLabel for="assetType">Asset Type</label>
+                        <select cSelect formControlName="assetType">
+                            <option value="" disabled selected>Choose asset type</option>
+                            @for (type of assetTypes; track type.value) {
+                            <option [value]="type.value">{{ type.label }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Supply Type -->
+                    <div class="mb-3">
+                        <label cLabel for="supplyType">Supply Type</label>
+                        <select cSelect formControlName="supplyType">
+                            <option value="" disabled selected>Choose supply type</option>
+                            @for (type of supplyTypes; track type.value) {
+                            <option [value]="type.value">{{ type.label }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Supply -->
+                    <div class="mb-3">
+                        <label cLabel for="supplyType">Supply</label>
+                        <select cSelect formControlName="supplyType">
+                            <option value="" disabled selected>Choose supply type</option>
+                            @for (type of supply; track type.value) {
+                            <option [value]="type.value">{{ type.label }}</option>
+                            }
+                        </select>
+                    </div>
+                </c-col>
+
+                <!-- Right Column -->
+                <c-col [lg]>
+                    <!-- Pricing Model -->
+                    <div class="mb-3">
+                        <label cLabel for="pricingModel">Pricing Model</label>
+                        <select cSelect formControlName="pricingModel">
+                            <option value="" disabled selected>Select pricing model</option>
+                            @for (model of pricingModels; track model.value) {
+                            <option [value]="model.value">{{ model.label }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Trading Model -->
+                    <div class="mb-3">
+                        <label cLabel for="tradingModel">Trading Model</label>
+                        <select cSelect formControlName="tradingModel">
+                            <option value="" disabled selected>Select trading model</option>
+                            @for (model of tradingModels; track model.value) {
+                            <option [value]="model.value">{{ model.label }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Execution Model -->
+                    <div class="mb-3">
+                        <label cLabel for="executionModel">Execution Model</label>
+                        <select cSelect formControlName="executionModel">
+                            <option value="" disabled selected>Select execution model</option>
+                            @for (model of executionModels; track model.value) {
+                            <option [value]="model.value">{{ model.label }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Market ID -->
+                    <div class="mb-3">
+                        <label cLabel for="marketId">Market ID</label>
+                        <select cSelect formControlName="marketId">
+                            <option value="" disabled selected>Select market</option>
+                            @for (market of marketIds; track market.value) {
+                            <option [value]="market.value">{{ market.label }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Level -->
+                    <div class="mb-3">
+                        <label cLabel for="level">Level</label>
+                        <select cSelect formControlName="level">
+                            <option value="" disabled selected>Select level</option>
+                            @for (level of levels; track level.value) {
+                            <option [value]="level.value">{{ level.label }}</option>
+                            }
+                        </select>
+                    </div>
+                </c-col>
+            </c-row>
+
+            <c-row class="align-items-center">
+                <c-col>
+                    <!-- Exclusive -->
+                    <c-form-check sizing="lg" switch>
+                        <input cFormCheckInput type="checkbox" formControlName="exclusive" />
+                        <label cFormCheckLabel>Exclusive</label>
+                    </c-form-check>
+                </c-col>
+
+                <!-- Right-aligned submit button -->
+                <c-col class="text-end">
+                    <button cButton color="primary" type="submit" [disabled]="submitting || assetForm.invalid">
+                        Submit
+                    </button>
+                </c-col>
+            </c-row>
+        </c-card-body>
+    </c-card>
+</form>
