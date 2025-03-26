@@ -1,146 +1,177 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { SYSTEM_ENUMS } from '../constants/enums';
-
-export interface EnumMapping {
-  [key: number]: string;
-}
-
-interface SysVars {
-  id: number;
-  name: string;
-}
-
-interface EnumApiData {
-  count: number;
-  sysvars: SysVars[];
-}
+import { SYSTEM_ENUMS, SYSTEM_ENUMS_MAP } from '../constants/enums';
+import {
+  EnumApiData,
+  SysVars,
+  EnumMapping,
+  EnumMarketInfoData,
+} from '../@types/enums';
+import { SelectOption } from '../@types/generic';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EnumService {
-  private transactionTypesSubject = new BehaviorSubject<EnumMapping>({});
-  private assetTypesSubject = new BehaviorSubject<EnumMapping>({});
-  private assetStatesSubject = new BehaviorSubject<EnumMapping>({});
-  private pricingModelsSubject = new BehaviorSubject<EnumMapping>({});
+  private enumSubjects: Record<string, BehaviorSubject<EnumMapping>> = {
+    [SYSTEM_ENUMS.TRX_TYPE]: new BehaviorSubject<EnumMapping>({}),
+    [SYSTEM_ENUMS.ASSET_TYPE]: new BehaviorSubject<EnumMapping>({}),
+    [SYSTEM_ENUMS.ASSET_STATE]: new BehaviorSubject<EnumMapping>({}),
+    [SYSTEM_ENUMS.PRICING_MODEL]: new BehaviorSubject<EnumMapping>({}),
+    [SYSTEM_ENUMS.SUPPLY_TYPES]: new BehaviorSubject<EnumMapping>({}),
+    [SYSTEM_ENUMS.ACCOUNT_LEVEL]: new BehaviorSubject<EnumMapping>({}),
+    [SYSTEM_ENUMS.TRADING_MODEL]: new BehaviorSubject<EnumMapping>({}),
+    [SYSTEM_ENUMS.EXECUTION_MODEL]: new BehaviorSubject<EnumMapping>({}),
+    [SYSTEM_ENUMS.MARKET]: new BehaviorSubject<EnumMapping>({}),
+  };
 
-  public transactionTypes$ = this.transactionTypesSubject.asObservable();
-  public assetTypes$ = this.assetTypesSubject.asObservable();
-  public assetStates$ = this.assetStatesSubject.asObservable();
-  public pricingModels$ = this.pricingModelsSubject.asObservable();
+  private cache: Record<string, EnumMapping> = {}; // In-memory cache
+
+  private enumUrlMapping = SYSTEM_ENUMS_MAP;
 
   constructor(private http: HttpClient) {}
 
-  // Getter methods for templates and components
-  getTransactionTypeLabel(typeId: number): string {
-    return this.transactionTypesSubject.value[typeId] || `Unknown (${typeId})`;
-  }
+  /**
+   * Generic method to get enum mapping or a list.
+   * @param key - The enum key (from SYSTEM_ENUMS)
+   * @param asList - If true, returns an array of { value, label } objects
+   */
+  getEnumData<T extends boolean | undefined>(
+    key: (typeof SYSTEM_ENUMS)[keyof typeof SYSTEM_ENUMS],
+    asList?: T
+  ): T extends true ? SelectOption[] : EnumMapping {
+    const enumData = this.enumSubjects[key]?.value || {};
 
-  getAssetTypeLabel(typeId: number): string {
-    return this.assetTypesSubject.value[typeId] || `Unknown (${typeId})`;
-  }
+    if (asList) {
+      return Object.entries(enumData).map(
+        ([value, label]) =>
+          ({
+            value,
+            label: label as string,
+          } as SelectOption)
+      ) as any;
+    }
 
-  getAssetStateLabel(stateId: number): string {
-    return this.assetStatesSubject.value[stateId] || `Unknown (${stateId})`;
+    return enumData as any;
   }
-
-  getPricingModelLabel(modelId: number): string {
-    return this.pricingModelsSubject.value[modelId] || `Unknown (${modelId})`;
-  }
-
-  private enumUrlMapping = {
-    [SYSTEM_ENUMS.TRX_TYPE]: '/general/sysvars/Transaction%20Type',
-    [SYSTEM_ENUMS.ASSET_TYPE]: '/general/sysvars/Asset%20Type',
-    [SYSTEM_ENUMS.ASSET_STATE]: '/general/sysvars/Asset%20State',
-    [SYSTEM_ENUMS.PRICING_MODEL]: '/general/sysvars/Pricing%20Model',
-  };
 
   private async fetchEnumData(
     key: (typeof SYSTEM_ENUMS)[keyof typeof SYSTEM_ENUMS]
-  ) {
-    let response;
-    try {
-      response = await firstValueFrom(
-        this.http.get<EnumApiData>(this.enumUrlMapping[key])
-      ).then(({ sysvars }) => sysvars);
-    } catch {
-      console.error('Failed to fetch enum data from API');
-      this.loadFallbackEnums(key);
-      return;
+  ): Promise<SysVars[]> {
+    if (this.cache[key]) {
+      return Object.entries(this.cache[key]).map(([id, name]) => ({
+        id: Number(id),
+        name,
+      }));
     }
-    return response;
+    try {
+      const response = await firstValueFrom(
+        this.http.get<EnumMarketInfoData | EnumApiData>(
+          this.enumUrlMapping[key]
+        )
+      );
+      let data: SysVars[] = [];
+
+      if ('countries' in response) {
+        data =
+          response.countries?.map((country) => ({
+            id: country.code,
+            name: country.nameShort,
+          })) || [];
+      } else {
+        data = response.sysvars || [];
+      }
+
+      // Store in cache
+      this.cache[key] = this.formatEnumData(data);
+
+      return data;
+    } catch (error) {
+      console.error(`Failed to fetch enum data for ${key}:`, error);
+      this.loadFallbackEnums(key);
+      return [];
+    }
   }
 
-  private formatEnumData(sysvars?: SysVars[]): EnumMapping {
-    if (!sysvars) return {};
+  private formatEnumData(sysvars: SysVars[]): EnumMapping {
     return sysvars.reduce((acc, { id, name }) => {
       acc[id] = name;
       return acc;
     }, {} as EnumMapping);
   }
 
-  // Method called by APP_INITIALIZER
   async loadEnums(
     keys?: (typeof SYSTEM_ENUMS)[keyof typeof SYSTEM_ENUMS][]
   ): Promise<void> {
     try {
-      let transactionTypes: SysVars[] | undefined;
-      let assetTypes: SysVars[] | undefined;
-      let assetStates: SysVars[] | undefined;
-      let pricingModels: SysVars[] | undefined;
-
-      if (!keys || keys.includes(SYSTEM_ENUMS.TRX_TYPE))
-        transactionTypes = await this.fetchEnumData(SYSTEM_ENUMS.TRX_TYPE);
-      if (!keys || keys.includes(SYSTEM_ENUMS.ASSET_TYPE))
-        assetTypes = await this.fetchEnumData(SYSTEM_ENUMS.ASSET_TYPE);
-      if (!keys || keys.includes(SYSTEM_ENUMS.ASSET_STATE))
-        assetStates = await this.fetchEnumData(SYSTEM_ENUMS.ASSET_STATE);
-      if (!keys || keys.includes(SYSTEM_ENUMS.PRICING_MODEL))
-        pricingModels = await this.fetchEnumData(SYSTEM_ENUMS.PRICING_MODEL);
-
-      if (transactionTypes)
-        this.transactionTypesSubject.next(
-          this.formatEnumData(transactionTypes)
-        );
-      if (assetTypes)
-        this.assetTypesSubject.next(this.formatEnumData(assetTypes));
-      if (assetStates)
-        this.assetStatesSubject.next(this.formatEnumData(assetStates));
-      if (pricingModels)
-        this.pricingModelsSubject.next(this.formatEnumData(pricingModels));
-    } catch (error) {}
+      for (const key of Object.keys(this.enumSubjects) as Array<
+        (typeof SYSTEM_ENUMS)[keyof typeof SYSTEM_ENUMS]
+      >) {
+        if (!keys || keys.includes(key)) {
+          const enumData = await this.fetchEnumData(key);
+          this.enumSubjects[key].next(this.formatEnumData(enumData));
+        }
+      }
+    } catch (error) {
+      console.error('Error loading enums:', error);
+    }
   }
 
   private loadFallbackEnums(
-    key?: (typeof SYSTEM_ENUMS)[keyof typeof SYSTEM_ENUMS]
+    key: (typeof SYSTEM_ENUMS)[keyof typeof SYSTEM_ENUMS]
   ): void {
-    // Fallback values in case API fails
-    if (!key || key.includes(SYSTEM_ENUMS.TRX_TYPE))
-      this.transactionTypesSubject.next({
+    const fallbackData: Record<string, EnumMapping> = {
+      [SYSTEM_ENUMS.TRX_TYPE]: {
         1: 'Sell',
         2: 'Buy',
         3: 'P2P',
-      });
-    if (!key || key.includes(SYSTEM_ENUMS.ASSET_TYPE))
-      this.assetTypesSubject.next({
+      },
+      [SYSTEM_ENUMS.ASSET_TYPE]: {
         1: 'Precious Metals',
         2: 'Real Estate',
         3: 'Media & Artworks',
         4: 'Carbon Credits',
-      });
-    if (!key || key.includes(SYSTEM_ENUMS.ASSET_STATE))
-      this.assetStatesSubject.next({
+      },
+      [SYSTEM_ENUMS.ASSET_STATE]: {
         1: 'Initialized',
         2: 'Active',
         3: 'Suspended',
         4: 'Deactivated',
-      });
-    if (!key || key.includes(SYSTEM_ENUMS.PRICING_MODEL))
-      this.pricingModelsSubject.next({
+      },
+      [SYSTEM_ENUMS.PRICING_MODEL]: {
         1: 'Fixed Source',
         2: 'Open Market',
-      });
+      },
+      [SYSTEM_ENUMS.SUPPLY_TYPES]: {
+        1: 'Fixed',
+        2: 'Dynamic',
+      },
+      [SYSTEM_ENUMS.ACCOUNT_LEVEL]: {
+        1: 'Level 0',
+        2: 'Level 1',
+        3: 'Level 2',
+        4: 'Level 3',
+      },
+      [SYSTEM_ENUMS.TRADING_MODEL]: {
+        1: 'Locked',
+        2: 'Open',
+      },
+      [SYSTEM_ENUMS.EXECUTION_MODEL]: {
+        1: 'OnChain',
+        2: 'On/Off',
+        3: 'Off/On',
+      },
+      [SYSTEM_ENUMS.MARKET]: {
+        818: 'Egypt',
+        682: 'Saudi Arabia',
+      },
+    };
+
+    if (fallbackData[key]) {
+      this.enumSubjects[key].next(fallbackData[key]);
+    } else {
+      console.warn(`No fallback data available for ${key}`);
+    }
   }
 }

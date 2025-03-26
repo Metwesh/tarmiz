@@ -54,7 +54,6 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class LoginComponent {
   loginForm!: FormGroup<{
-    contract: FormControl<string | null>;
     username: FormControl<string | null>;
     password: FormControl<string | null>;
   }>;
@@ -67,7 +66,6 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      contract: ['', Validators.required],
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
@@ -82,14 +80,13 @@ export class LoginComponent {
     this.errorMessage = '';
 
     // Don't need type checking because they will be valid
-    const { contract, username, password } = this.loginForm.value as {
-      [key in 'contract' | 'username' | 'password']: string;
+    const { username, password } = this.loginForm.value as {
+      [key in 'username' | 'password']: string;
     };
 
     this.authService
-      .login(contract, username, password)
+      .login(username, password)
       .then((res) => {
-        console.log(res);
         if (!res) throw new Error('Login failed');
         this.router.navigate(['/dashboard']);
       })

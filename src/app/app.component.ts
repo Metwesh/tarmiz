@@ -13,10 +13,12 @@ import { ColorModeService } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
 import {
-  brandSet,
   cilChartLine,
   cilDiamond,
   cilShieldAlt,
+  cilCheckCircle,
+  cilBellExclamation,
+  cilCheckAlt,
 } from '@coreui/icons';
 
 @Component({
@@ -42,6 +44,9 @@ export class AppComponent implements OnInit {
       cilShieldAlt,
       cilDiamond,
       cilChartLine,
+      cilCheckCircle,
+      cilBellExclamation,
+      cilCheckAlt,
       ...iconSubset,
     };
     this.#colorModeService.localStorageItemName.set(

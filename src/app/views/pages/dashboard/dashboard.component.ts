@@ -1,15 +1,19 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ChartData, ChartOptions } from 'chart.js';
+import { SYSTEM_ENUMS } from '../../../constants/enums';
 import {
-  RowComponent,
-  ColComponent,
-  TextColorDirective,
+  CardBodyComponent,
   CardComponent,
   CardHeaderComponent,
-  CardBodyComponent,
+  ColComponent,
+  RowComponent,
+  SpinnerComponent,
+  TextColorDirective,
 } from '@coreui/angular';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
-import { ChartData, ChartOptions } from 'chart.js';
+import { EnumService } from '../../../services/enum-service.service';
+import { IAsset } from '../assets-list/asset-list.types';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,80 +25,102 @@ import { ChartData, ChartOptions } from 'chart.js';
     CardHeaderComponent,
     CardBodyComponent,
     ChartjsComponent,
+    SpinnerComponent,
   ],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss',
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
+  assets: IAsset[] = [];
+  isLoading = true;
+
   options: ChartOptions = {
     maintainAspectRatio: false,
   };
 
-  months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  chartBarData: ChartData = {
-    labels: [...this.months].slice(0, 7),
-    datasets: [
-      {
-        label: 'GitHub Commits',
-        backgroundColor: '#f87979',
-        data: [40, 20, 12, 39, 17, 42, 79],
-      },
-    ],
+  barChartOptions: ChartOptions = {
+    ...this.options,
+    normalized: true,
   };
 
-  chartDoughnutData: ChartData = {
-    labels: ['VueJs', 'EmberJs', 'ReactJs', 'Angular'],
-    datasets: [
-      {
-        backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-        data: [40, 20, 80, 10],
-      },
-    ],
-  };
+  // Chart Data
+  chartBarData: ChartData = { labels: [], datasets: [] };
+  chartPieData: ChartData = { labels: [], datasets: [] };
+  chartDoughnutData: ChartData = { labels: [], datasets: [] };
 
-  // chartDoughnutOptions = {
-  //   aspectRatio: 1,
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  //   radius: '100%'
-  // };
-
-  chartPieData: ChartData = {
-    labels: ['Red', 'Green', 'Yellow'],
-    datasets: [
-      {
-        data: [300, 50, 100],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-      },
-    ],
-  };
-
-  // chartPieOptions = {
-  //   aspectRatio: 1,
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  //   radius: '100%'
-  // };
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    // this.http.get('/api/dashboard').subscribe((response) => {
-    //   console.log('Dashboard data:', response);
-    // });
+    this.http
+      .get<{ count: number; assets: IAsset[] }>('/assets/list')
+      .subscribe({
+        next: ({ assets }) => {
+          this.assets = assets;
+          this.isLoading = false;
+          this.updateCharts();
+        },
+        error: (err) => {
+          console.error('Failed to load assets:', err);
+          this.isLoading = false;
+        },
+      });
+  }
+
+  updateCharts() {
+    if (!this.assets.length) return;
+
+    // 📊 Bar Chart: Asset Supply
+    this.chartBarData = {
+      labels: this.assets.map((asset) => asset.name),
+      datasets: [
+        {
+          label: 'Total Supply',
+          backgroundColor: '#08D0DD',
+          data: this.assets.map((asset) => asset.supply),
+        },
+      ],
+    };
+
+    // 🥧 Pie Chart: Asset Type Distribution
+    const assetTypeMap = new Map<string, number>();
+    this.assets.forEach((asset) => {
+      assetTypeMap.set(
+        asset.assetTypeName,
+        (assetTypeMap.get(asset.assetTypeName) || 0) + 1
+      );
+    });
+
+    this.chartPieData = {
+      labels: Array.from(assetTypeMap.keys()).map(
+        (type) => type || `Type ${type}`
+      ),
+      datasets: [
+        {
+          data: Array.from(assetTypeMap.values()),
+          backgroundColor: ['#332EAE', '#FF6384', '#FFCE56', '#4BC0C0'],
+        },
+      ],
+    };
+
+    // 🍩 Doughnut Chart: Asset State Distribution
+    const assetStateMap = new Map<string, number>();
+    this.assets.forEach((asset) => {
+      assetStateMap.set(
+        asset.stateName,
+        (assetStateMap.get(asset.stateName) || 0) + 1
+      );
+    });
+
+    this.chartDoughnutData = {
+      labels: Array.from(assetStateMap.keys()).map(
+        (state) => state || `State ${state}`
+      ),
+      datasets: [
+        {
+          data: Array.from(assetStateMap.values()),
+          backgroundColor: ['#D622FF', '#FF4500', '#FFD700', '#32CD32'],
+        },
+      ],
+    };
   }
 }

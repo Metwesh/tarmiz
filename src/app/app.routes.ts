@@ -42,6 +42,13 @@ export const routes: Routes = [
                 (m) => m.AssetCreateComponent
               ),
           },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./views/pages/asset-inner/asset-inner.component').then(
+                (m) => m.AssetInnerComponent
+              ),
+          },
         ],
       },
       {
@@ -58,26 +65,6 @@ export const routes: Routes = [
         ],
       },
     ],
-  },
-  {
-    path: '404',
-    loadComponent: () =>
-      import('./views/pages/page404/page404.component').then(
-        (m) => m.Page404Component
-      ),
-    data: {
-      title: 'Page 404',
-    },
-  },
-  {
-    path: '500',
-    loadComponent: () =>
-      import('./views/pages/page500/page500.component').then(
-        (m) => m.Page500Component
-      ),
-    data: {
-      title: 'Page 500',
-    },
   },
   {
     path: 'login',
@@ -102,5 +89,25 @@ export const routes: Routes = [
       title: 'Register Page',
     },
   },
-  { path: '**', redirectTo: 'dashboard' },
+  {
+    path: '404',
+    loadComponent: () =>
+      import('./views/pages/page404/page404.component').then(
+        (m) => m.Page404Component
+      ),
+    data: {
+      title: 'Page 404',
+    },
+  },
+  {
+    path: '500',
+    loadComponent: () =>
+      import('./views/pages/page500/page500.component').then(
+        (m) => m.Page500Component
+      ),
+    data: {
+      title: 'Page 500',
+    },
+  },
+  { path: '**', redirectTo: '404' },
 ];

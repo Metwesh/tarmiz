@@ -1,83 +1,80 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { CookieService } from './cookie.service';
+import { TokenService } from './token.service';
 import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private token: string | null = null;
   private authSubject = new BehaviorSubject<boolean>(false);
-
-  // Create an observable for use with modern functional guards
   isAuthenticated$ = this.authSubject.asObservable();
-
-  private readonly TOKEN_NAME = 'ng-tarmiz-auth-token';
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private cookieService: CookieService
+    private tokenService: TokenService
   ) {
-    // Check if user is already logged in from cookie
     this.checkAuthStatus();
   }
 
-  login(
-    contract: string,
-    username: string,
-    password: string
-  ): Promise<boolean> {
+  login(username: string, password: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.http
-        .post<{ token: string }>('/account/login', {
-          contract,
-          username,
-          password,
-        })
+        .post<{ token: string }>('/account/login', { username, password })
         .subscribe({
           next: (response) => {
-            this.token = response.token;
-
-            // Use cookie service instead of localStorage
-            this.cookieService.setCookie(this.TOKEN_NAME, this.token, {
-              expires: 7, // 7 days
-              secure: true, // Use on HTTPS only
-              sameSite: 'Strict', // CSRF protection
-            });
-
+            this.tokenService.setToken(response.token);
             this.authSubject.next(true);
             resolve(true);
           },
-          error: (error) => {
-            console.error('Login failed:', error);
-            reject(error);
+          error: (err) => {
+            console.error('Login error:', err);
+            this.authSubject.next(false);
+            reject(err);
           },
         });
     });
   }
 
   logout(): void {
-    this.token = null;
-    // Delete cookie instead of localStorage
-    this.cookieService.deleteCookie(this.TOKEN_NAME);
-    this.router.navigate(['/login']);
+    this.tokenService.clearToken();
     this.authSubject.next(false);
+    setTimeout(() => this.router.navigate(['/login']), 0);
   }
 
-  getToken(): any {
-    if (!this.token) this.logout();
-    return this.token;
+  validateToken(): Promise<boolean> {
+    return new Promise((resolve) => {
+      const token = this.tokenService.getToken();
+      if (!token) return resolve(false);
+
+      this.http
+        .get<{ info: { accountId: number } }>('/account/info')
+        .subscribe({
+          next: (res) => {
+            resolve(!!res?.info?.accountId);
+          },
+          error: (err) => {
+            console.log('Token validation failed', err);
+            resolve(false);
+          },
+        });
+    });
   }
 
   private checkAuthStatus(): void {
-    // Get from cookie instead of localStorage
-    const token = this.cookieService.getCookie(this.TOKEN_NAME);
-    if (!token) return this.logout();
+    const token = this.tokenService.getToken();
+    if (!token) return;
 
-    this.token = token;
-    this.authSubject.next(true);
+    this.validateToken()
+      .then((isValid) => {
+        this.authSubject.next(isValid);
+        if (!isValid) this.logout();
+      })
+      .catch(() => {
+        this.authSubject.next(false);
+        this.logout();
+      });
   }
 }

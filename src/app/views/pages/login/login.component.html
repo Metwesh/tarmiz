@@ -1,4 +1,6 @@
-<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+<div
+  class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center"
+>
   <c-container breakpoint="md">
     <c-row class="justify-content-center">
       <c-col lg="10" xl="8">
@@ -10,35 +12,34 @@
                 <p class="text-body-secondary">Sign In to your account</p>
                 @if (errorMessage) {
                 <c-alert color="danger">
-                  {{ errorMessage }}
+                  <svg cIcon name="cilBellExclamation" size="sm"></svg>
+                  <span>{{ errorMessage }}</span>
                 </c-alert>
-                }
-                <c-input-group class="mb-3">
-                  <span cInputGroupText>
-                    <svg cIcon name="cilShieldAlt"></svg>
-                  </span>
-                  <input autoComplete="contract" id="contract" cFormControl formControlName="contract"
-                    placeholder="Contract" />
-                </c-input-group>
-                @if (loginForm.get('contract')?.invalid && (loginForm.get('contract')?.dirty ||
-                loginForm.get('contract')?.touched)) {
-                <div class="text-danger mb-2 d-flex align-items-center justify-content-end">
-                  @if (loginForm.get('contract')?.errors?.['required']) {
-                  <small>Contract is required</small>
-                  }
-                </div>
                 }
 
                 <c-input-group class="mb-3">
                   <span cInputGroupText>
                     <svg cIcon name="cilUser"></svg>
                   </span>
-                  <input autoComplete="username" id="username" cFormControl formControlName="username"
-                    placeholder="Username" />
+                  <input
+                    autoComplete="username"
+                    id="username"
+                    cFormControl
+                    formControlName="username"
+                    [class]="{
+                      'is-invalid':
+                        loginForm.get('username')?.invalid &&
+                        loginForm.get('username')?.touched
+                    }"
+                    placeholder="Username"
+                  />
                 </c-input-group>
-                @if (loginForm.get('username')?.invalid && (loginForm.get('username')?.dirty ||
+                @if (loginForm.get('username')?.invalid &&
+                (loginForm.get('username')?.dirty ||
                 loginForm.get('username')?.touched)) {
-                <div class="text-danger mb-2 d-flex align-items-center justify-content-end">
+                <div
+                  class="text-danger mb-2 d-flex align-items-center justify-content-end"
+                >
                   @if (loginForm.get('username')?.errors?.['required']) {
                   <small>Username is required</small>
                   }
@@ -49,32 +50,50 @@
                   <span cInputGroupText>
                     <svg cIcon name="cilLockLocked"></svg>
                   </span>
-                  <input autoComplete="current-password" id="current-password" cFormControl formControlName="password"
-                    placeholder="Password" type="password" />
+                  <input
+                    autoComplete="current-password"
+                    id="current-password"
+                    cFormControl
+                    formControlName="password"
+                    placeholder="Password"
+                    type="password"
+                    [class]="{
+                      'is-invalid':
+                        loginForm.get('password')?.invalid &&
+                        loginForm.get('password')?.touched
+                    }"
+                  />
                 </c-input-group>
-                @if (loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty ||
+                @if (loginForm.get('password')?.invalid &&
+                (loginForm.get('password')?.dirty ||
                 loginForm.get('password')?.touched)) {
-                <div class="text-danger mb-2 d-flex align-items-center justify-content-end">
+                <div
+                  class="text-danger mb-2 d-flex align-items-center justify-content-end"
+                >
                   @if (loginForm.get('password')?.errors?.['required']) {
                   <small>Password is required</small>
-                  }
-                  @if (loginForm.get('password')?.errors?.['minlength']) {
-                  <small>Password must be at least {{loginForm.get('password')?.errors?.['minlength']?.requiredLength}}
-                    characters</small>
+                  } @if (loginForm.get('password')?.errors?.['minlength']) {
+                  <small
+                    >Password must be at least
+                    {{loginForm.get('password')?.errors?.['minlength']?.requiredLength}}
+                    characters</small
+                  >
                   }
                 </div>
                 }
 
                 <c-row>
                   <c-col xs="6">
-                    <button cButton class="px-4" color="primary" type="submit"
-                      [disabled]="loginForm.invalid || isLoading">
+                    <button
+                      cButton
+                      class="px-4"
+                      color="primary"
+                      type="submit"
+                      [disabled]="loginForm.invalid || isLoading"
+                    >
                       @if (isLoading) {
                       <c-spinner size="sm" />
-                      Loading...
-                      } @else {
-                      Login
-                      }
+                      Loading... } @else { Login }
                     </button>
                   </c-col>
                   <c-col class="text-right" xs="6">
@@ -86,15 +105,27 @@
               </form>
             </c-card-body>
           </c-card>
-          <c-card [ngStyle]="{'minWidth.%': 44}" class="text-white bg-primary py-5">
+          <c-card
+            [ngStyle]="{ 'minWidth.%': 44 }"
+            class="text-white bg-primary py-5"
+          >
             <c-card-body class="text-center">
               <div>
                 <h2>Sign up</h2>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua.
+                  Digital asset management platform that helps your business
+                  grow.
                 </p>
-                <a [active]="true" cButton class="mt-3" color="primary" routerLink="/register">
+                <p>
+                  <strong>Powered by Tarmiz</strong>
+                </p>
+                <a
+                  [active]="true"
+                  cButton
+                  class="mt-3"
+                  color="primary"
+                  routerLink="/register"
+                >
                   Register Now!
                 </a>
               </div>

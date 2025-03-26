@@ -1,135 +1,234 @@
-<form cForm [formGroup]="assetForm" (ngSubmit)="onSubmit()">
-    <c-card>
-        <c-card-header>
-            <strong>Create Asset</strong>
-        </c-card-header>
-        <c-card-body>
-            <c-row>
-                <!-- Left Column -->
-                <c-col [lg]>
-                    <!-- Name -->
-                    <div class="mb-3">
-                        <label cLabel for="name">Name</label>
-                        <input cFormControl id="name" type="text" placeholder="Enter asset name"
-                            formControlName="name" />
-                    </div>
+<form
+  cForm
+  [formGroup]="assetForm"
+  autocomplete="off"
+  class="mb-4"
+  (ngSubmit)="onSubmit()"
+>
+  <c-card>
+    <c-card-header>
+      <strong>Create Asset</strong>
+    </c-card-header>
+    <c-card-body>
+      <c-row class="row-cols-2">
+        <!-- Name -->
+        <c-col>
+          <div class="mb-3">
+            <label cLabel for="name">Name</label>
+            <input
+              cFormControl
+              id="name"
+              type="text"
+              placeholder="Enter asset name"
+              formControlName="name"
+              [class.is-invalid]="
+                assetForm.get('name')?.invalid && assetForm.get('name')?.touched
+              "
+            />
+            @if (assetForm.get('name')?.invalid && (assetForm.get('name')?.dirty
+            || assetForm.get('name')?.touched)) {
+            <div class="text-danger small text-end">
+              @if (assetForm.get('name')?.errors?.['required']) {
+              <small>Name is required</small>
+              }
+            </div>
+            }
+          </div>
+        </c-col>
 
-                    <!-- Symbol -->
-                    <div class="mb-3">
-                        <label cLabel for="symbol">Symbol</label>
-                        <input cFormControl id="symbol" type="text" placeholder="Enter symbol"
-                            formControlName="symbol" />
-                    </div>
+        <!-- Symbol -->
+        @if ( assetForm.get('supplyType')?.value !== '2') {
+        <c-col>
+          <div class="mb-3">
+            <label cLabel for="symbol">Symbol</label>
+            <input
+              cFormControl
+              id="symbol"
+              type="text"
+              placeholder="Enter symbol"
+              formControlName="symbol"
+              [class.is-invalid]="
+                assetForm.get('symbol')?.invalid &&
+                assetForm.get('symbol')?.touched
+              "
+            />
+            @if (assetForm.get('symbol')?.invalid &&
+            (assetForm.get('symbol')?.dirty ||
+            assetForm.get('symbol')?.touched)) {
+            <div class="text-danger small text-end">
+              @if (assetForm.get('symbol')?.errors?.['required']) {
+              <small>Symbol is required</small>
+              }
+            </div>
+            }
+          </div>
+        </c-col>
+        }
 
-                    <!-- Asset Type -->
-                    <div class="mb-3">
-                        <label cLabel for="assetType">Asset Type</label>
-                        <select cSelect formControlName="assetType">
-                            <option value="" disabled selected>Choose asset type</option>
-                            @for (type of assetTypes; track type.value) {
-                            <option [value]="type.value">{{ type.label }}</option>
-                            }
-                        </select>
-                    </div>
+        <!-- Asset Type -->
+        <c-col>
+          <app-async-select
+            [key]="assetTypeUrl"
+            [control]="assetForm.controls['assetType']"
+            controlName="assetType"
+            label="Asset Type"
+            placeholder="Choose asset type"
+          />
+        </c-col>
 
-                    <!-- Supply Type -->
-                    <div class="mb-3">
-                        <label cLabel for="supplyType">Supply Type</label>
-                        <select cSelect formControlName="supplyType">
-                            <option value="" disabled selected>Choose supply type</option>
-                            @for (type of supplyTypes; track type.value) {
-                            <option [value]="type.value">{{ type.label }}</option>
-                            }
-                        </select>
-                    </div>
+        <!-- Supply Type -->
+        <c-col>
+          <app-async-select
+            [key]="supplyTypesUrl"
+            [control]="assetForm.controls['supplyType']"
+            controlName="supplyType"
+            label="Supply Type"
+            placeholder="Choose supply type"
+          />
+        </c-col>
 
-                    <!-- Supply -->
-                    <div class="mb-3">
-                        <label cLabel for="supplyType">Supply</label>
-                        <select cSelect formControlName="supplyType">
-                            <option value="" disabled selected>Choose supply type</option>
-                            @for (type of supply; track type.value) {
-                            <option [value]="type.value">{{ type.label }}</option>
-                            }
-                        </select>
-                    </div>
-                </c-col>
+        <!-- Supply -->
+        @if ( assetForm.get('supplyType')?.value !== '2') {
+        <c-col>
+          <div class="mb-3">
+            <label cLabel for="supply">Supply</label>
+            <input
+              cFormControl
+              id="supply"
+              type="number"
+              placeholder="Enter supply"
+              formControlName="supply"
+              [class.is-invalid]="
+                assetForm.get('supply')?.invalid &&
+                assetForm.get('supply')?.touched
+              "
+            />
+            @if (assetForm.get('supply')?.invalid &&
+            (assetForm.get('supply')?.dirty ||
+            assetForm.get('supply')?.touched)) {
+            <div class="text-danger small text-end">
+              @if (assetForm.get('supply')?.errors?.['required']) {
+              <small>Supply is required</small>
+              }
+            </div>
+            }
+          </div>
+        </c-col>
+        }
 
-                <!-- Right Column -->
-                <c-col [lg]>
-                    <!-- Pricing Model -->
-                    <div class="mb-3">
-                        <label cLabel for="pricingModel">Pricing Model</label>
-                        <select cSelect formControlName="pricingModel">
-                            <option value="" disabled selected>Select pricing model</option>
-                            @for (model of pricingModels; track model.value) {
-                            <option [value]="model.value">{{ model.label }}</option>
-                            }
-                        </select>
-                    </div>
+        <!-- Pricing Model -->
+        <c-col>
+          <app-async-select
+            [key]="pricingModelUrl"
+            [control]="assetForm.controls['pricingModel']"
+            controlName="pricingModel"
+            label="Pricing Model"
+            placeholder="Choose pricing model"
+          />
+        </c-col>
 
-                    <!-- Trading Model -->
-                    <div class="mb-3">
-                        <label cLabel for="tradingModel">Trading Model</label>
-                        <select cSelect formControlName="tradingModel">
-                            <option value="" disabled selected>Select trading model</option>
-                            @for (model of tradingModels; track model.value) {
-                            <option [value]="model.value">{{ model.label }}</option>
-                            }
-                        </select>
-                    </div>
+        <!-- Trading Model -->
+        <c-col>
+          <app-async-select
+            [key]="tradingModelUrl"
+            [control]="assetForm.controls['tradingModel']"
+            controlName="tradingModel"
+            label="Trading Model"
+            placeholder="Choose trading model"
+          />
+        </c-col>
 
-                    <!-- Execution Model -->
-                    <div class="mb-3">
-                        <label cLabel for="executionModel">Execution Model</label>
-                        <select cSelect formControlName="executionModel">
-                            <option value="" disabled selected>Select execution model</option>
-                            @for (model of executionModels; track model.value) {
-                            <option [value]="model.value">{{ model.label }}</option>
-                            }
-                        </select>
-                    </div>
+        <!-- Execution Model -->
+        <c-col>
+          <app-async-select
+            [key]="executionModelUrl"
+            [control]="assetForm.controls['executionModel']"
+            controlName="executionModel"
+            label="Execution Model"
+            placeholder="Choose execution model"
+          />
+        </c-col>
 
-                    <!-- Market ID -->
-                    <div class="mb-3">
-                        <label cLabel for="marketId">Market ID</label>
-                        <select cSelect formControlName="marketId">
-                            <option value="" disabled selected>Select market</option>
-                            @for (market of marketIds; track market.value) {
-                            <option [value]="market.value">{{ market.label }}</option>
-                            }
-                        </select>
-                    </div>
+        <!-- Market ID -->
+        <c-col>
+          <app-async-select
+            [key]="marketUrl"
+            [control]="assetForm.controls['marketId']"
+            controlName="marketId"
+            label="Market"
+            placeholder="Choose market"
+          />
+        </c-col>
 
-                    <!-- Level -->
-                    <div class="mb-3">
-                        <label cLabel for="level">Level</label>
-                        <select cSelect formControlName="level">
-                            <option value="" disabled selected>Select level</option>
-                            @for (level of levels; track level.value) {
-                            <option [value]="level.value">{{ level.label }}</option>
-                            }
-                        </select>
-                    </div>
-                </c-col>
-            </c-row>
+        <!-- Account Level -->
+        <c-col>
+          <app-async-select
+            [key]="accountLevelUrl"
+            [control]="assetForm.controls['level']"
+            controlName="level"
+            label="Account Level"
+            placeholder="Choose level"
+          />
+        </c-col>
+      </c-row>
 
-            <c-row class="align-items-center">
-                <c-col>
-                    <!-- Exclusive -->
-                    <c-form-check sizing="lg" switch>
-                        <input cFormCheckInput type="checkbox" formControlName="exclusive" />
-                        <label cFormCheckLabel>Exclusive</label>
-                    </c-form-check>
-                </c-col>
+      <c-row>
+        <c-col xs="12">
+          <!-- Extra -->
+          <div class="mb-3">
+            <label cLabel for="extra">Extra</label>
+            <textarea
+              cFormControl
+              id="extra"
+              formControlName="extra"
+              placeholder="Enter extra info"
+              rows="3"
+            ></textarea>
+          </div>
+        </c-col>
+      </c-row>
 
-                <!-- Right-aligned submit button -->
-                <c-col class="text-end">
-                    <button cButton color="primary" type="submit" [disabled]="submitting || assetForm.invalid">
-                        Submit
-                    </button>
-                </c-col>
-            </c-row>
-        </c-card-body>
-    </c-card>
+      @if (successMessage || errorMessage) {
+      <c-alert [color]="successMessage ? 'success' : 'danger'">
+        <div class="d-flex align-items-center gap-2">
+          @if (successMessage) {
+          <svg cIcon name="cilCheckCircle" size="sm"></svg>
+          <span>{{ successMessage }}</span>
+          } @else {
+          <svg cIcon name="cilBellExclamation" size="sm"></svg>
+          <span>{{ errorMessage }}</span>
+          }
+        </div>
+      </c-alert>
+      }
+
+      <c-row class="align-items-center">
+        <c-col>
+          <!-- Exclusive -->
+          <c-form-check sizing="lg" switch>
+            <input
+              cFormCheckInput
+              type="checkbox"
+              formControlName="exclusive"
+            />
+            <label cFormCheckLabel>Exclusive</label>
+          </c-form-check>
+        </c-col>
+
+        <!-- Right-aligned submit button -->
+        <c-col class="text-end">
+          <button
+            cButton
+            color="primary"
+            type="submit"
+            [disabled]="submitting || assetForm.invalid"
+          >
+            @if (submitting) {
+            <c-spinner size="sm" />
+            Loading... } @else { Submit }
+          </button>
+        </c-col>
+      </c-row>
+    </c-card-body>
+  </c-card>
 </form>

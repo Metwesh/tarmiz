@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -9,20 +9,21 @@ import {
 } from '@angular/forms';
 import {
   AlertComponent,
+  ButtonDirective,
   CardBodyComponent,
   CardComponent,
   CardHeaderComponent,
   ColComponent,
-  RowComponent,
-  FormLabelDirective,
-  ButtonDirective,
-  FormFeedbackComponent,
   FormCheckComponent,
-  FormControlDirective,
   FormCheckInputDirective,
   FormCheckLabelDirective,
-  FormSelectDirective,
+  FormControlDirective,
+  RowComponent,
+  SpinnerComponent,
 } from '@coreui/angular';
+import { IconDirective } from '@coreui/icons-angular';
+import { AsyncSelectComponent } from '../../../components/async-select/async-select.component';
+import { SYSTEM_ENUMS } from '../../../constants/enums';
 
 @Component({
   selector: 'app-asset-create',
@@ -38,12 +39,15 @@ import {
     FormControlDirective,
     FormCheckInputDirective,
     FormCheckLabelDirective,
-    FormSelectDirective,
+    AsyncSelectComponent,
+    SpinnerComponent,
+    AlertComponent,
+    IconDirective,
   ],
   templateUrl: './asset-create.component.html',
   styleUrl: './asset-create.component.scss',
 })
-export class AssetCreateComponent {
+export class AssetCreateComponent implements OnInit {
   assetForm!: FormGroup<{
     name: FormControl<string | null>;
     symbol: FormControl<string | null>;
@@ -63,46 +67,13 @@ export class AssetCreateComponent {
   successMessage = '';
   errorMessage = '';
 
-  assetTypes = [
-    { value: 1, label: 'Type 1' },
-    { value: 2, label: 'Type 2' },
-  ];
-
-  supplyTypes = [
-    { value: 1, label: 'Fixed Supply' },
-    { value: 2, label: 'Unlimited Supply' },
-  ];
-
-  supply = [
-    { value: 1, label: 'Fixed Supply' },
-    { value: 2, label: 'Unlimited Supply' },
-  ];
-
-  pricingModels = [
-    { value: 1, label: 'Model A' },
-    { value: 2, label: 'Model B' },
-  ];
-
-  levels = [
-    { value: 1, label: 'Level 1' },
-    { value: 2, label: 'Level 2' },
-    { value: 3, label: 'Level 3' },
-  ];
-
-  tradingModels = [
-    { value: 1, label: 'Model X' },
-    { value: 2, label: 'Model Y' },
-  ];
-
-  executionModels = [
-    { value: 1, label: 'Model P' },
-    { value: 2, label: 'Model Q' },
-  ];
-
-  marketIds = [
-    { value: 1, label: 'Market 1' },
-    { value: 2, label: 'Market 2' },
-  ];
+  assetTypeUrl = SYSTEM_ENUMS.ASSET_TYPE;
+  pricingModelUrl = SYSTEM_ENUMS.PRICING_MODEL;
+  supplyTypesUrl = SYSTEM_ENUMS.SUPPLY_TYPES;
+  accountLevelUrl = SYSTEM_ENUMS.ACCOUNT_LEVEL;
+  tradingModelUrl = SYSTEM_ENUMS.TRADING_MODEL;
+  executionModelUrl = SYSTEM_ENUMS.EXECUTION_MODEL;
+  marketUrl = SYSTEM_ENUMS.MARKET;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.assetForm = this.fb.group({
@@ -111,7 +82,7 @@ export class AssetCreateComponent {
       assetType: ['', [Validators.required]],
       exclusive: [false, [Validators.required]],
       supplyType: ['', [Validators.required]],
-      supply: ['', [Validators.required]],
+      supply: [''],
       pricingModel: ['', [Validators.required]],
       tradingModel: ['', [Validators.required]],
       executionModel: ['', [Validators.required]],
@@ -119,6 +90,17 @@ export class AssetCreateComponent {
       marketId: ['', [Validators.required]],
       level: ['', [Validators.required]],
       extra: [''],
+    });
+  }
+
+  ngOnInit() {
+    // Watch for changes in supplyType
+    this.assetForm.get('supplyType')?.valueChanges.subscribe((value) => {
+      const supplyControl = this.assetForm.get('supply');
+      if (value === '1') supplyControl?.setValidators([Validators.required]);
+      else supplyControl?.clearValidators();
+
+      supplyControl?.updateValueAndValidity();
     });
   }
 
@@ -130,12 +112,13 @@ export class AssetCreateComponent {
   }
 
   onSubmit() {
+    this.submitting = true;
     if (this.assetForm.invalid) {
       this.errorMessage = 'Please fill all required fields correctly.';
+      this.submitting = false;
       return;
     }
 
-    this.submitting = true;
     this.successMessage = '';
     this.errorMessage = '';
 
@@ -143,11 +126,10 @@ export class AssetCreateComponent {
       next: () => {
         this.successMessage = 'Asset created successfully!';
         this.assetForm.reset();
+        this.submitting = false;
       },
-      error: () => {
-        this.errorMessage = 'Failed to create asset. Please try again.';
-      },
-      complete: () => {
+      error: (err) => {
+        this.errorMessage = err.error;
         this.submitting = false;
       },
     });

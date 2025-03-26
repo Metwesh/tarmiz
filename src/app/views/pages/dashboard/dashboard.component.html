@@ -1,56 +1,65 @@
 <c-row>
-    <c-col lg="12">
-        <c-card class="mb-4">
-            <c-card-header>
-                Bar Chart
-            </c-card-header>
-            <c-card-body>
-                <c-chart type="bar" [data]="chartBarData" [options]="options" [height]="300" />
-            </c-card-body>
-        </c-card>
-    </c-col>
+  <c-col lg="12">
+    <c-card class="mb-4">
+      <c-card-header> Asset Supply Overview </c-card-header>
+      <c-card-body>
+        @if (isLoading) {
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="height: 18.75rem"
+        >
+          <c-spinner />
+        </div>
+        } @else {
+        <c-chart
+          type="bar"
+          [data]="chartBarData"
+          [options]="options"
+          [height]="300"
+        />
+        }
+      </c-card-body>
+    </c-card>
+  </c-col>
 </c-row>
 <c-row>
-    <c-col xs="12" lg="6">
-        <c-card class="mb-4">
-            <c-card-header>
-                Doughnut Chart
-            </c-card-header>
-            <c-card-body>
-                <c-chart type="doughnut" [data]="chartDoughnutData" [options]="options" />
-            </c-card-body>
-        </c-card>
-    </c-col>
-    <c-col xs="12" lg="6">
-        <c-card class="mb-4">
-            <c-card-header>
-                Pie Chart
-            </c-card-header>
-            <c-card-body>
-                <c-chart type="pie" [data]="chartPieData" [options]="options" />
-            </c-card-body>
-        </c-card>
-    </c-col>
+  <c-col xs="12" lg="6">
+    <c-card class="mb-4">
+      <c-card-header> Asset State Distribution </c-card-header>
+      <c-card-body>
+        @if (isLoading) {
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="height: 16.75rem"
+        >
+          <c-spinner />
+        </div>
+
+        } @else {
+        <c-chart
+          type="doughnut"
+          [data]="chartDoughnutData"
+          [options]="options"
+        />
+        }
+      </c-card-body>
+    </c-card>
+  </c-col>
+  <c-col xs="12" lg="6">
+    <c-card class="mb-4">
+      <c-card-header> Asset Type Breakdown </c-card-header>
+      <c-card-body>
+        @if (isLoading) {
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="height: 16.75rem"
+        >
+          <c-spinner />
+        </div>
+        } @else {
+        <c-chart type="pie" [data]="chartPieData" [options]="options" />
+        }
+      </c-card-body>
+    </c-card>
+  </c-col>
 </c-row>
-<!-- <c-row>
-    <c-col xs="12" lg="6">
-        <c-card class="mb-4">
-            <c-card-header>
-                Polar Area Chart
-            </c-card-header>
-            <c-card-body>
-                <c-chart type="polarArea" [data]="chartPolarAreaData" [options]="options" />
-            </c-card-body>
-        </c-card>
-    </c-col>
-    <c-col xs="12" lg="6">
-        <c-card class="mb-4">
-            <c-card-header>
-                Radar Chart
-            </c-card-header>
-            <c-card-body>
-                <c-chart type="radar" [data]="chartRadarData" [options]="options" />
-            </c-card-body>
-        </c-card>
-    </c-col>
-</c-row> -->

@@ -1,37 +1,18 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, CanActivateChildFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { map, take } from 'rxjs/operators';
+import { TokenService } from '../services/token.service';
 
-/**
- * Guard that checks if the user is authenticated.
- * If not, it redirects to the login page.
- */
-export const authGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+export const authGuard: CanActivateFn = () => {
+  const tokenService = inject(TokenService);
   const router = inject(Router);
 
-  return authService.isAuthenticated$.pipe(
-    take(1),
-    map((isAuthenticated) => {
-      if (isAuthenticated) {
-        // User is authenticated, allow access
-        return true;
-      } else {
-        // User is not authenticated, redirect to login
-        // Adding returnUrl query param to redirect back after login
-        router.navigate(['/login'], {
-          queryParams: { returnUrl: state.url },
-        });
-        return false;
-      }
-    })
-  );
+  if (!tokenService.getToken()) {
+    setTimeout(() => router.navigate(['/dashboard']), 0);
+    return false;
+  }
+  return true;
 };
 
-/**
- * Same guard logic for child routes
- */
 export const authGuardChild: CanActivateChildFn = (childRoute, state) => {
   return authGuard(childRoute, state);
 };
