@@ -5,14 +5,17 @@
     [id]="controlName"
     [formControl]="control"
     [class]="{ 'is-invalid': control.invalid && control.touched }"
-    >
-    @if (isLoading) {
-    <option value="" disabled selected>Loading...</option>
-    }@else if (!isLoading && options.length === 0) {
-    <option value="" disabled selected>No options available</option>
-    } @else {
-    <option value="" disabled selected>{{ placeholder }}</option>
-    @for (option of options; track option.value) {
+  >
+    <option value="" disabled [selected]="!control.value">
+      {{
+        isLoading
+          ? "Loading..."
+          : !isLoading && options.length === 0
+          ? "No options available"
+          : placeholder
+      }}
+    </option>
+    @if (options.length > 0) { @for (option of options; track option.value) {
     <option [value]="option.value">{{ option.label }}</option>
     } }
   </select>

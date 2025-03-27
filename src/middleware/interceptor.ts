@@ -8,7 +8,7 @@ export function authInterceptor(
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> {
-  const cookieService = inject(CookieService); 
+  const cookieService = inject(CookieService);
   const token = cookieService.getCookie('ng-tarmiz-auth-token');
 
   const urlReqClone = req.clone({
@@ -27,9 +27,12 @@ export function authInterceptor(
     catchError((err) => {
       if (
         err.status === 401 ||
-        (err.status === 400 && err.error.error === 'Session invalid or expired')
+        (err.status === 400 &&
+          err.error.error === 'Session invalid or expired') ||
+        (err.status === 400 &&
+          err.error === 'Execution reverted: Session invalid or expired')
       ) {
-        cookieService.deleteCookie('ng-tarmiz-auth-token'); 
+        cookieService.deleteCookie('ng-tarmiz-auth-token');
       }
       throw err;
     })

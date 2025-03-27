@@ -20,7 +20,7 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./views/pages/dashboard/dashboard.component').then(
+          import('./pages/dashboard/dashboard.component').then(
             (m) => m.DashboardComponent
           ),
       },
@@ -31,21 +31,21 @@ export const routes: Routes = [
           {
             path: 'list',
             loadComponent: () =>
-              import('./views/pages/assets-list/assets-list.component').then(
+              import('./pages/assets-list/assets-list.component').then(
                 (m) => m.AssetsListComponent
               ),
           },
           {
             path: 'create',
             loadComponent: () =>
-              import('./views/pages/asset-create/asset-create.component').then(
+              import('./pages/asset-create/asset-create.component').then(
                 (m) => m.AssetCreateComponent
               ),
           },
           {
             path: ':id',
             loadComponent: () =>
-              import('./views/pages/asset-inner/asset-inner.component').then(
+              import('./pages/asset-inner/asset-inner.component').then(
                 (m) => m.AssetInnerComponent
               ),
           },
@@ -59,8 +59,15 @@ export const routes: Routes = [
             path: 'list',
             loadComponent: () =>
               import(
-                './views/pages/transaction-list/transaction-list.component'
+                './pages/transaction-list/transaction-list.component'
               ).then((m) => m.TransactionListComponent),
+          },
+          {
+            path: ':address/:id',
+            loadComponent: () =>
+              import(
+                './pages/transaction-inner/transaction-inner.component'
+              ).then((m) => m.TransactionInnerComponent),
           },
         ],
       },
@@ -69,9 +76,7 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./views/pages/login/login.component').then(
-        (m) => m.LoginComponent
-      ),
+      import('./pages/login/login.component').then((m) => m.LoginComponent),
     canActivate: [redundantAuthGuard],
     data: {
       title: 'Login Page',
@@ -80,7 +85,7 @@ export const routes: Routes = [
   {
     path: 'register',
     loadComponent: () =>
-      import('./views/pages/register/register.component').then(
+      import('./pages/register/register.component').then(
         (m) => m.RegisterComponent
       ),
     canActivate: [redundantAuthGuard],
@@ -92,7 +97,7 @@ export const routes: Routes = [
   {
     path: '404',
     loadComponent: () =>
-      import('./views/pages/page404/page404.component').then(
+      import('./pages/page404/page404.component').then(
         (m) => m.Page404Component
       ),
     data: {
@@ -102,7 +107,7 @@ export const routes: Routes = [
   {
     path: '500',
     loadComponent: () =>
-      import('./views/pages/page500/page500.component').then(
+      import('./pages/page500/page500.component').then(
         (m) => m.Page500Component
       ),
     data: {

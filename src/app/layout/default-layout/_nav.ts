@@ -29,20 +29,8 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Transactions',
-    url: '/transactions',
+    url: '/transactions/list',
     iconComponent: { name: 'cil-chart-line' },
-    children: [
-      {
-        name: 'Transaction List',
-        url: '/transactions/list',
-        icon: 'nav-icon-bullet',
-      },
-      {
-        name: 'Transaction Create',
-        url: '/transactions/create',
-        icon: 'nav-icon-bullet',
-      },
-    ],
   },
   {
     name: 'Users',

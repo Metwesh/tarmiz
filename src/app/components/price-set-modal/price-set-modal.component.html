@@ -1,0 +1,96 @@
+<c-modal
+  [visible]="visible"
+  (visibleChange)="onVisibleChange($event)"
+  alignment="center"
+>
+  <c-modal-header>
+    <h5 cModalTitle>Set Price</h5>
+    <button (click)="onReset()" cButtonClose></button>
+  </c-modal-header>
+
+  <c-modal-body>
+    <c-card class="mb-3">
+      <c-card-header class="fw-bold">Market & Asset Details</c-card-header>
+      <c-card-body>
+        <p><strong>Market ID:</strong> {{ formData?.marketId }}</p>
+        <p class="m-0"><strong>Asset ID:</strong> {{ formData?.assetId }}</p>
+      </c-card-body>
+    </c-card>
+
+    <form
+      id="price-set-form"
+      [formGroup]="priceSetForm"
+      (ngSubmit)="onSubmit()"
+      (reset)="onReset()"
+    >
+      <c-row>
+        <c-col xs="12" md="6">
+          <div class="mb-3">
+            <label class="form-label" cLabel>Bid Price</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="bid"
+              cFormControl
+              [class]="{
+                'is-invalid':
+                  priceSetForm.controls['bid'].invalid &&
+                  priceSetForm.controls['bid'].touched
+              }"
+            />
+            @if (priceSetForm.controls['bid'].invalid &&
+            priceSetForm.controls['bid'].touched) {
+            <div class="text-danger">Bid price is required</div>
+            }
+          </div>
+        </c-col>
+
+        <c-col xs="12" md="6">
+          <div class="mb-3">
+            <label class="form-label" cLabel>Ask Price</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="ask"
+              cFormControl
+              [class]="{
+                'is-invalid':
+                  priceSetForm.controls['ask'].invalid &&
+                  priceSetForm.controls['ask'].touched
+              }"
+            />
+            @if (priceSetForm.controls['ask'].invalid &&
+            priceSetForm.controls['ask'].touched) {
+            <div class="text-danger">Ask price is required</div>
+            }
+          </div>
+        </c-col>
+      </c-row>
+    </form>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button
+      cButton
+      form="price-set-form"
+      type="reset"
+      color="secondary"
+      [disabled]="submitting"
+    >
+      @if (submitting) {
+      <c-spinner size="sm" />
+      Loading... } @else { Discard Changes}
+    </button>
+    <button
+      cButton
+      form="price-set-form"
+      type="submit"
+      color="primary"
+      [disabled]="submitting || priceSetForm.invalid"
+    >
+      @if (submitting) {
+      <c-spinner size="sm" />
+      Loading... } @else { Save Changes }
+    </button>
+  </c-modal-footer>
+</c-modal>

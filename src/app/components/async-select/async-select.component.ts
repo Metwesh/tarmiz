@@ -1,11 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FormSelectDirective } from '@coreui/angular';
-import { EnumApiData } from '../../@types/enums';
-import { EnumService } from '../../services/enum-service.service';
 import { SelectOption } from '../../@types/generic';
-import { SYSTEM_ENUMS, SYSTEM_ENUMS_MAP } from '../../constants/enums';
+import { SYSTEM_ENUMS } from '../../constants/enums';
+import { EnumService } from '../../services/enum-service.service';
 
 @Component({
   selector: 'app-async-select',
@@ -39,7 +37,10 @@ export class AsyncSelectComponent implements OnInit {
 
   options: SelectOption[] = [];
 
-  constructor(private enumService: EnumService) {}
+  constructor(
+    private enumService: EnumService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.enumService.loadEnums([this.key]).then(() => this.getOptions());
