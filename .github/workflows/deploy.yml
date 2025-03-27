@@ -26,9 +26,6 @@ jobs:
           node-version: '18'
           cache: 'yarn'
 
-      - name: Remove package-lock.json
-        run: rm -f package-lock.json
-
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 

@@ -102,7 +102,7 @@
               <td>{{ asset.symbol }}</td>
               <td>{{ asset.assetTypeName }}</td>
               <td>
-                {{ asset.prices?.[0]?.ask | currency:asset.prices?.[0]?.currencyCode:'symbol':'1.2-2' }}
+                {{ asset.prices[0]?.ask | currency:asset.prices[0]?.currencyCode:'symbol':'1.2-2' }}
               </td>
               <td>{{ asset.pricingModelName }}</td>
               <td>
