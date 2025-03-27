@@ -5,18 +5,29 @@ on:
     branches:
       - main  # Set this to your default branch
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          persist-credentials: true  # This ensures credentials are available for later steps
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'yarn'
+
+      - name: Remove package-lock.json
+        run: rm -f package-lock.json
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -31,6 +42,6 @@ jobs:
 
       - name: Build and Deploy
         run: |
-          yarn exec ng deploy --base-href=/tarmiz/ --no-silent
+          yarn exec ng deploy --base-href=/tarmiz/ --no-silent --repo=https://x-access-token:${GITHUB_TOKEN}@github.com/Metwesh/tarmiz.git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
