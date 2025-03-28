@@ -7,6 +7,7 @@ import {
   ButtonDirective,
   CardBodyComponent,
   CardComponent,
+  CardHeaderActionsComponent,
   CardHeaderComponent,
   ColComponent,
   ContainerComponent,
@@ -19,6 +20,7 @@ import { AssetPricing, IAssetInner } from '../assets-list/asset-list.types';
 import { ISubscriber } from '../subscribers-list/subscribers-list.types';
 import { DatePipe } from '@angular/common';
 import { PriceSetModalComponent } from '../../components/price-set-modal/price-set-modal.component';
+import { SetAssetStateModalComponent } from '../../components/set-asset-state-modal/set-asset-state-modal.component';
 
 @Component({
   selector: 'app-asset-inner',
@@ -29,6 +31,7 @@ import { PriceSetModalComponent } from '../../components/price-set-modal/price-s
     CardComponent,
     CardHeaderComponent,
     CardBodyComponent,
+    CardHeaderActionsComponent,
     IconDirective,
     BadgeComponent,
     BreadcrumbModule,
@@ -38,7 +41,7 @@ import { PriceSetModalComponent } from '../../components/price-set-modal/price-s
     DatePipe,
     ButtonDirective,
     PriceSetModalComponent,
-    PriceSetModalComponent,
+    SetAssetStateModalComponent,
   ],
   templateUrl: './asset-inner.component.html',
   styleUrl: './asset-inner.component.scss',
@@ -50,8 +53,8 @@ export class AssetInnerComponent implements OnInit {
   public subscribers: ISubscriber[] = [];
   public isSubscribersLoading = true;
 
-  isModalOpen = false;
-  formData:
+  isPriceSetModalOpen = false;
+  priceSetFormData:
     | {
         assetId: number;
         marketId: number;
@@ -59,6 +62,9 @@ export class AssetInnerComponent implements OnInit {
         ask: number;
       }
     | undefined;
+
+  isAssetStateModalOpen = false;
+  assetState: number | undefined;
 
   constructor(
     private http: HttpClient,
@@ -110,21 +116,35 @@ export class AssetInnerComponent implements OnInit {
 
   togglePriceSetModal(priceInfo: AssetPricing) {
     const assetId = this.route.snapshot.paramMap.get('id')!;
-    this.formData = {
+    this.priceSetFormData = {
       assetId: +assetId,
       marketId: priceInfo.marketId,
       ask: priceInfo.ask,
       bid: priceInfo.bid,
     };
-    this.openModal();
+    this.openPriceSetModal();
   }
 
-  openModal() {
-    this.isModalOpen = true;
+  openPriceSetModal() {
+    this.isPriceSetModalOpen = true;
   }
 
-  closeModal() {
-    this.isModalOpen = false;
+  closePriceSetModal() {
+    this.isPriceSetModalOpen = false;
+  }
+
+  toggleAssetStateModal(state: number | undefined) {
+    if (!state) return;
+    this.assetState = state;
+    this.openAssetStateModal();
+  }
+
+  openAssetStateModal() {
+    this.isAssetStateModalOpen = true;
+  }
+
+  closeAssetStateModal() {
+    this.isAssetStateModalOpen = false;
   }
 
   refetchAssetDetails() {

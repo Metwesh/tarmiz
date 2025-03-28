@@ -10,7 +10,7 @@ A brief description of what this project does and who it's for.
 yarn add
 ```
 
-## Deployment
+## Development
 
 ```bash
 yarn start

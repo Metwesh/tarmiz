@@ -118,7 +118,7 @@ export class PriceSetModalComponent {
       ask: this.formData?.ask ?? 0,
     });
     if (value) return;
-    this.closeModal();
+    this.onReset();
   }
 
   private closeModal() {

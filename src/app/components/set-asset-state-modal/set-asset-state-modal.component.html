@@ -1,0 +1,57 @@
+<c-modal
+  [visible]="visible"
+  (visibleChange)="onVisibleChange($event)"
+  alignment="center"
+
+>
+  <c-modal-header>
+    <h5 cModalTitle>Set Asset State</h5>
+    <button (click)="onReset()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <form
+      id="asset-state-form"
+      [formGroup]="assetStateForm"
+      (ngSubmit)="onSubmit()"
+      (reset)="onReset()"
+    >
+      <div class="mb-3">
+        <app-async-select
+          [key]="assetStateKey"
+          [control]="assetStateForm.controls['state']"
+          controlName="state"
+          label="Asset State"
+          placeholder="Choose asset state"
+          [defaultValue]="assetStateDefaultValue"
+          [excludeValues]="['1']"
+          [enabled]="visible"
+        />
+      </div>
+    </form>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button
+      cButton
+      form="asset-state-form"
+      type="reset"
+      color="secondary"
+      [disabled]="submitting"
+    >
+      @if (submitting) {
+      <c-spinner size="sm" />
+      Loading... } @else { Discard Changes}
+    </button>
+    <button
+      cButton
+      form="asset-state-form"
+      type="submit"
+      color="primary"
+      [disabled]="submitting || assetStateForm.invalid"
+    >
+      @if (submitting) {
+      <c-spinner size="sm" />
+      Loading... } @else { Save Changes }
+    </button>
+  </c-modal-footer>
+</c-modal>

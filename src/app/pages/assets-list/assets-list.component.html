@@ -28,7 +28,8 @@
               <th class="bg-body-tertiary">Name</th>
               <th class="bg-body-tertiary">Symbol</th>
               <th class="bg-body-tertiary">Type</th>
-              <th class="bg-body-tertiary">Prices</th>
+              <th class="bg-body-tertiary">Asking Price</th>
+              <th class="bg-body-tertiary">Bidding Price</th>
               <th class="bg-body-tertiary">State</th>
               <th class="bg-body-tertiary"></th>
             </tr>
@@ -37,6 +38,15 @@
             @if (isAssetsLoading) { @for (placeholder of [0, 1, 2, 3, 4]; track
             placeholder) {
             <tr>
+              <td>
+                <p cPlaceholderAnimation="glow" style="margin: 0">
+                  <span
+                    cCol="12"
+                    cPlaceholder
+                    style="border-radius: 1rem; width: 100%"
+                  ></span>
+                </p>
+              </td>
               <td>
                 <p cPlaceholderAnimation="glow" style="margin: 0">
                   <span
@@ -102,9 +112,12 @@
               <td>{{ asset.symbol }}</td>
               <td>{{ asset.assetTypeName }}</td>
               <td>
-                {{ asset.prices[0]?.ask | currency:asset.prices[0]?.currencyCode:'symbol':'1.2-2' }}
+                {{ asset.prices?.[0]?.ask | currency:asset.prices?.[0]?.currencyCode:'symbol':'1.2-2' }}
               </td>
-              <td>{{ asset.pricingModelName }}</td>
+              <td>
+                {{ asset.prices?.[0]?.bid | currency:asset.prices?.[0]?.currencyCode:'symbol':'1.2-2' }}
+              </td>
+              <td>{{ asset.stateName }}</td>
               <td>
                 <svg cIcon name="cilChevronRight" style="width: 1rem"></svg>
               </td>

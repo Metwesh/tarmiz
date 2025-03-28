@@ -36,7 +36,7 @@ export interface IAsset {
   stateId: number;
   stateName: string;
   locked: boolean;
-  prices: Array<AssetPricing>;
+  prices: Array<AssetPricing> | undefined;
 }
 
 export interface IAssetInner extends IAsset {

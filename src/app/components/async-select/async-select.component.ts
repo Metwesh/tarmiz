@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FormSelectDirective } from '@coreui/angular';
 import { SelectOption } from '../../@types/generic';
@@ -11,7 +17,7 @@ import { EnumService } from '../../services/enum-service.service';
   templateUrl: './async-select.component.html',
   styleUrl: './async-select.component.scss',
 })
-export class AsyncSelectComponent implements OnInit {
+export class AsyncSelectComponent implements OnInit, OnChanges {
   @Input({
     required: true,
   })
@@ -32,22 +38,47 @@ export class AsyncSelectComponent implements OnInit {
     required: true,
   })
   placeholder!: string;
+  @Input() defaultValue: string | undefined;
+  @Input() excludeValues: string[] = [];
+  @Input() enabled: boolean = true;
 
   isLoading = true;
 
   options: SelectOption[] = [];
 
-  constructor(
-    private enumService: EnumService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(private enumService: EnumService) {}
 
   ngOnInit() {
+    if (!this.enabled) return;
     this.enumService.loadEnums([this.key]).then(() => this.getOptions());
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['enabled'] && !changes['enabled'].firstChange) {
+      if (this.enabled)
+        this.enumService.loadEnums([this.key]).then(() => this.getOptions());
+    }
+  }
+
   getOptions() {
-    this.options = this.enumService.getEnumData(this.key, true);
+    if (this.excludeValues) {
+      this.options = this.enumService
+        .getEnumData(this.key, true)
+        .filter((option) => !this.excludeValues.includes(option.value));
+    } else {
+      this.options = this.enumService.getEnumData(this.key, true);
+    }
+
     this.isLoading = false;
+    if (this.defaultValue === undefined) return;
+    const defaultOption = this.options.find(
+      (option) => option.value == this.defaultValue
+    );
+
+    if (!defaultOption) return;
+    this.control.setValue(defaultOption.value);
+    // Defer marking the control as dirty and touched
+    this.control.markAsDirty();
+    this.control.markAsTouched();
   }
 }

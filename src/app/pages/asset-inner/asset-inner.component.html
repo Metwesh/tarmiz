@@ -150,14 +150,25 @@
               </p>
 
               <p>
-                <strong>State: </strong> @if (isAssetLoading) {
+                <strong>Asset lock state: </strong>
+                @if (isAssetLoading) {
                 <span cPlaceholderAnimation="glow">
                   <span
                     cPlaceholder
                     style="width: 5rem; border-radius: 1rem"
-                  ></span>
-                </span>
-                } @else { {{ asset?.stateName }} }
+                  ></span> </span
+                >} @else {
+                {{ asset?.locked ? "Locked" : "Unlocked" }}
+                <c-badge
+                  [color]="asset?.locked ? 'danger' : 'success'"
+                  size="sm"
+                >
+                  <svg
+                    cIcon
+                    [name]="asset?.locked ? 'cilX' : 'cilCheckAlt'"
+                  ></svg>
+                </c-badge>
+                }
               </p>
             </c-col>
           </c-row>
@@ -185,38 +196,45 @@
 
   <c-row class="mt-4 justify-content-center">
     <c-col md="4">
-      <c-card style="height: 7rem">
+      <c-card class="h-100">
+        <c-card-header
+          class="d-flex align-items-center justify-content-between"
+        >
+          <strong>Asset State</strong>
+          <c-card-header-actions>
+            <button
+              cButton
+              color="primary"
+              size="sm"
+              (click)="toggleAssetStateModal(asset?.stateId)"
+            >
+              Set State
+            </button>
+          </c-card-header-actions>
+        </c-card-header>
         <c-card-body>
-          <p><strong>Asset lock state:</strong></p>
           <p>
-            <strong>
-              @if (isAssetLoading) {
-              <span cPlaceholderAnimation="glow">
-                <span
-                  cPlaceholder
-                  style="width: 20rem; border-radius: 1rem"
-                ></span>
-              </span>
-              } @else {
-              {{ asset?.locked ? "Locked" : "Unlocked" }}
-              <c-badge [color]="asset?.locked ? 'danger' : 'success'" size="sm">
-                <svg
-                  cIcon
-                  [name]="asset?.locked ? 'cilX' : 'cilCheckAlt'"
-                ></svg>
-              </c-badge>
-              }
-            </strong>
+            @if (isAssetLoading) {
+            <span cPlaceholderAnimation="glow">
+              <span
+                cPlaceholder
+                style="width: 5rem; border-radius: 1rem"
+              ></span>
+            </span>
+            } @else { {{ asset?.stateName }} }
           </p>
         </c-card-body>
       </c-card>
     </c-col>
 
     <c-col md="4">
-      <c-card style="height: 7rem">
+      <c-card class="h-100">
+        <c-card-header style="height: 3rem" class="d-flex align-items-center">
+          <strong>Extra Info</strong>
+        </c-card-header>
+
         <c-card-body>
-          <p><strong>Extra Info:</strong></p>
-          <p style="max-height: 1.5rem; overflow: auto; margin: 0">
+          <p style="max-height: 3rem; overflow: auto; margin: 0">
             @if (isAssetLoading) {
             <span cPlaceholderAnimation="glow">
               <span
@@ -231,6 +249,7 @@
     </c-col>
   </c-row>
 
+  <!-- Prices table -->
   <c-row class="mt-4 justify-content-center">
     <c-col md="8">
       <c-card>
@@ -335,6 +354,7 @@
     </c-col>
   </c-row>
 
+  <!-- Subscribers table -->
   <c-row class="mt-4 justify-content-center">
     <c-col md="8">
       <c-card>
@@ -400,8 +420,16 @@
 
 <!-- Price setter modal -->
 <app-price-set-modal
-  [visible]="isModalOpen"
-  [formData]="formData"
-  (close)="closeModal()"
+  [visible]="isPriceSetModalOpen"
+  [formData]="priceSetFormData"
+  (close)="closePriceSetModal()"
+  (revalidate)="refetchAssetDetails()"
+/>
+
+<!-- Asset state setter modal -->
+<app-set-asset-state-modal
+  [visible]="isAssetStateModalOpen"
+  [assetState]="assetState"
+  (close)="closeAssetStateModal()"
   (revalidate)="refetchAssetDetails()"
 />
