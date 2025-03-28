@@ -29,9 +29,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Install angular-cli-ghpages
-        run: yarn add --dev angular-cli-ghpages
-
       - name: Configure Git
         run: |
           git config --global user.name "GitHub Action"
