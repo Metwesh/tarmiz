@@ -1,10 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import {
-  AvatarComponent,
-  BadgeComponent,
   ColorModeService,
   ContainerComponent,
   DropdownComponent,
@@ -16,9 +13,7 @@ import {
   HeaderComponent,
   HeaderNavComponent,
   HeaderTogglerDirective,
-  NavItemComponent,
-  NavLinkDirective,
-  SidebarToggleDirective,
+  SidebarToggleDirective
 } from '@coreui/angular';
 
 import { IconDirective } from '@coreui/icons-angular';
@@ -36,7 +31,6 @@ import { AuthService } from '../../../services/auth.service';
     NgTemplateOutlet,
     DropdownComponent,
     DropdownToggleDirective,
-    AvatarComponent,
     DropdownMenuDirective,
     DropdownHeaderDirective,
     DropdownItemDirective,

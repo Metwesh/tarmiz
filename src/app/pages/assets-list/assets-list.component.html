@@ -28,8 +28,18 @@
               <th class="bg-body-tertiary">Name</th>
               <th class="bg-body-tertiary">Symbol</th>
               <th class="bg-body-tertiary">Type</th>
-              <th class="bg-body-tertiary">Asking Price</th>
-              <th class="bg-body-tertiary">Bidding Price</th>
+              <th class="bg-body-tertiary">
+                <span>Asking Price</span>
+                @if (assets.length > 0) {
+                <span> ({{ assets[0].prices?.[0]?.currencyCode }}) </span>
+                }
+              </th>
+              <th class="bg-body-tertiary">
+                <span>Bidding Price</span>
+                @if (assets.length > 0) {
+                <span> ({{ assets[0].prices?.[0]?.currencyCode }}) </span>
+                }
+              </th>
               <th class="bg-body-tertiary">State</th>
               <th class="bg-body-tertiary"></th>
             </tr>
@@ -102,7 +112,17 @@
                 </p>
               </td>
             </tr>
-            } } @else { @for (asset of assets; track asset.assetId; let i =
+            } } @else if (!isAssetsLoading && assets.length === 0 ) {
+            <tr>
+              <td
+                style="padding-top: 10rem; padding-bottom: 10rem"
+                colspan="4"
+                class="text-center"
+              >
+                No assets available
+              </td>
+            </tr>
+            } @else { @for (asset of assets; track asset.assetId; let i =
             $index) {
             <tr
               [routerLink]="['/assets', asset.assetId]"
@@ -112,10 +132,10 @@
               <td>{{ asset.symbol }}</td>
               <td>{{ asset.assetTypeName }}</td>
               <td>
-                {{ asset.prices?.[0]?.ask | currency:asset.prices?.[0]?.currencyCode:'symbol':'1.2-2' }}
+                {{ (asset.prices?.[0]?.ask ?? 0) | number : '1.2-5' }}
               </td>
               <td>
-                {{ asset.prices?.[0]?.bid | currency:asset.prices?.[0]?.currencyCode:'symbol':'1.2-2' }}
+                {{ (asset.prices?.[0]?.bid ?? 0) | number : '1.2-5' }}
               </td>
               <td>{{ asset.stateName }}</td>
               <td>

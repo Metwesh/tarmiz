@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -14,10 +15,7 @@ import {
   TextColorDirective,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
-import { SYSTEM_ENUMS } from '../../constants/enums';
-import { EnumService } from '../../services/enum-service.service';
 import { IAsset } from './asset-list.types';
-import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-assets-list',
@@ -34,7 +32,7 @@ import { CurrencyPipe } from '@angular/common';
     PlaceholderDirective,
     PlaceholderAnimationDirective,
     RouterLink,
-    CurrencyPipe
+    DecimalPipe
   ],
   templateUrl: './assets-list.component.html',
   styleUrl: './assets-list.component.scss',

@@ -22,16 +22,7 @@
         <c-card-header
           class="d-flex justify-content-between align-items-center"
         >
-          <strong>
-            Asset @if (isAssetLoading) {
-            <span cPlaceholderAnimation="glow">
-              <span
-                cPlaceholder
-                style="width: 5rem; border-radius: 1rem"
-              ></span>
-            </span>
-            } @else { {{ asset?.assetId }} }</strong
-          >
+          <strong> Asset Details</strong>
           <c-badge color="secondary">
             @if (isAssetLoading) {
             <span cPlaceholderAnimation="glow">
@@ -99,7 +90,7 @@
                     style="width: 5rem; border-radius: 1rem"
                   ></span>
                 </span>
-                } @else { {{ asset?.supply }} }
+                } @else { {{ asset?.supply | number : "1.0" }} }
               </p>
             </c-col>
 
@@ -139,7 +130,7 @@
               </p>
 
               <p>
-                <strong>Market Level: </strong> @if (isAssetLoading) {
+                <strong>User Level: </strong> @if (isAssetLoading) {
                 <span cPlaceholderAnimation="glow">
                   <span
                     cPlaceholder
@@ -327,28 +318,71 @@
                   </p>
                 </td>
               </tr>
-              } } @else { @for (priceInfo of asset?.prices; track
+              } } @else if (!isAssetLoading && (!asset?.prices ||
+              asset?.prices?.length === 0) ) {
+              <tr style="margin-top: 10rem; margin-bottom: 10rem">
+                <td
+                  style="padding-top: 10rem; padding-bottom: 10rem"
+                  colspan="4"
+                  class="text-center"
+                >
+                  No prices available
+                </td>
+              </tr>
+              } @else { @for (priceInfo of asset?.prices; track
               priceInfo.update) {
               <tr>
                 <td>{{ priceInfo.marketName }}</td>
                 <td>{{ priceInfo.currencyCode }}</td>
-                <td>{{ priceInfo.bid }}</td>
-                <td>{{ priceInfo.ask }}</td>
-                <td>{{ priceInfo.update | date : "short" }}</td>
+                <td>{{ priceInfo.bid | number : "1.2-5" }}</td>
+                <td>{{ priceInfo.ask | number : "1.2-5" }}</td>
                 <td>
-                  <button
-                    cButton
-                    color="primary"
-                    size="sm"
-                    (click)="togglePriceSetModal(priceInfo)"
-                  >
-                    Set Price
-                  </button>
+                  {{ priceInfo.update * 1000 | date : "short" }}
+                </td>
+                <td>
+                  <div class="d-flex justify-content-end">
+                    <button
+                      cButton
+                      color="primary"
+                      size="sm"
+                      (click)="togglePriceSetModal(priceInfo)"
+                    >
+                      Set Price
+                    </button>
+                  </div>
                 </td>
               </tr>
               } }
             </tbody>
           </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+
+  <!-- Price History -->
+  <c-row class="mt-4 justify-content-center">
+    <c-col md="8">
+      <c-card class="mb-4">
+        <c-card-header class="d-flex align-items-center flex-wrap gap-2">
+          <span>Price History</span>
+        </c-card-header>
+        <c-card-body>
+          @if (isLoadingPriceHistory) {
+          <div
+            class="d-flex justify-content-center align-items-center"
+            style="height: 18.75rem"
+          >
+            <c-spinner />
+          </div>
+          } @else {
+          <c-chart
+            [type]="priceHistory.length === 1 ? 'bar' : 'line'"
+            [data]="chartBarData"
+            [options]="options"
+            [height]="300"
+          />
+          }
         </c-card-body>
       </c-card>
     </c-col>
@@ -365,9 +399,9 @@
           <table cTable [hover]="true" [responsive]="true" [striped]="true">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Subscriber</th>
-                <th>Balance</th>
+                <th class="bg-body-tertiary">#</th>
+                <th class="bg-body-tertiary">Subscriber</th>
+                <th class="bg-body-tertiary">Balance</th>
               </tr>
             </thead>
             <tbody>
@@ -402,12 +436,23 @@
                   </p>
                 </td>
               </tr>
-              } } @else { @for (subscriber of subscribers; track
+              } } @else if (!isSubscribersLoading && subscribers.length === 0 )
+              {
+              <tr style="margin-top: 10rem; margin-bottom: 10rem">
+                <td
+                  style="padding-top: 10rem; padding-bottom: 10rem"
+                  colspan="4"
+                  class="text-center"
+                >
+                  No subscribers available
+                </td>
+              </tr>
+              } @else { @for (subscriber of subscribers; track
               subscriber.subscriber; let index = $index) {
               <tr>
                 <td>{{ index + 1 }}</td>
                 <td>{{ subscriber.subscriber }}</td>
-                <td>{{ subscriber.balance }}</td>
+                <td>{{ subscriber.balance | number : "1.0" }}</td>
               </tr>
               } }
             </tbody>

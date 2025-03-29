@@ -25,6 +25,11 @@ export const navItems: INavData[] = [
         url: '/assets/create',
         icon: 'nav-icon-bullet',
       },
+      {
+        name: 'Pending Subscribers',
+        url: '/assets/pending-subscribers',
+        icon: 'nav-icon-bullet',
+      },
     ],
   },
   {

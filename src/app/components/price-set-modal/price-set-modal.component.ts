@@ -62,7 +62,9 @@ export class PriceSetModalComponent {
   formData:
     | {
         assetId: number;
+        assetName: string;
         marketId: number;
+        marketName: string;
         bid: number;
         ask: number;
       }

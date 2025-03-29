@@ -1,7 +1,7 @@
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ITransfer } from '../transaction-list/transaction-list.types';
 import {
   BreadcrumbModule,
   CardBodyComponent,
@@ -13,6 +13,7 @@ import {
   PlaceholderModule,
   RowComponent,
 } from '@coreui/angular';
+import { ITransfer } from '../transaction-list/transaction-list.types';
 
 @Component({
   selector: 'app-transaction-inner',
@@ -26,7 +27,9 @@ import {
     PlaceholderModule,
     ContainerComponent,
     BreadcrumbModule,
-    RouterLink
+    RouterLink,
+    DatePipe,
+    CurrencyPipe,
   ],
   templateUrl: './transaction-inner.component.html',
   styleUrl: './transaction-inner.component.scss',

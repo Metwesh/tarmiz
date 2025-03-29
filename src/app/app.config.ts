@@ -1,9 +1,7 @@
 import {
-  APP_INITIALIZER,
   ApplicationConfig,
   importProvidersFrom,
-  inject,
-  provideAppInitializer,
+  LOCALE_ID,
 } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
@@ -15,16 +13,19 @@ import {
   withViewTransitions,
 } from '@angular/router';
 
-import { DropdownModule, SidebarModule } from '@coreui/angular';
-import { IconSetService } from '@coreui/icons-angular';
-import { routes } from './app.routes';
+import { registerLocaleData } from '@angular/common';
 import {
   provideHttpClient,
   withFetch,
   withInterceptors,
 } from '@angular/common/http';
+import localeEnGb from '@angular/common/locales/en-GB';
+import { DropdownModule, SidebarModule } from '@coreui/angular';
+import { IconSetService } from '@coreui/icons-angular';
 import { authInterceptor } from '../middleware/interceptor';
-import { EnumService } from './services/enum-service.service';
+import { routes } from './app.routes';
+
+registerLocaleData(localeEnGb);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -45,5 +46,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(SidebarModule, DropdownModule),
     IconSetService,
     provideAnimationsAsync(),
+    { provide: LOCALE_ID, useValue: 'en-GB' }, // Set the locale to en-UK
   ],
 };

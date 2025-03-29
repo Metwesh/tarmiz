@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ITransaction, ITransfer } from './transaction-list.types';
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   CardBodyComponent,
   CardComponent,
@@ -13,8 +14,7 @@ import {
   TextColorDirective,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
-import { RouterLink } from '@angular/router';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { ITransaction, ITransfer } from './transaction-list.types';
 
 @Component({
   selector: 'app-transaction-list',
@@ -32,7 +32,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
     DatePipe,
     RouterLink,
     IconDirective,
-    CurrencyPipe,
+    DecimalPipe,
   ],
   templateUrl: './transaction-list.component.html',
   styleUrl: './transaction-list.component.scss',

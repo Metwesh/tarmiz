@@ -43,6 +43,13 @@ export const routes: Routes = [
               ),
           },
           {
+            path: 'pending-subscribers',
+            loadComponent: () =>
+              import(
+                './pages/subscribers-list/subscribers-list.component'
+              ).then((m) => m.SubscribersListComponent),
+          },
+          {
             path: ':id',
             loadComponent: () =>
               import('./pages/asset-inner/asset-inner.component').then(

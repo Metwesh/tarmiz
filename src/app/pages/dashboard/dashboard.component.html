@@ -1,9 +1,20 @@
 <c-row>
   <c-col lg="12">
     <c-card class="mb-4">
-      <c-card-header> Asset Supply Overview </c-card-header>
+      <c-card-header class="d-flex align-items-center flex-wrap gap-2">
+        <span>Price History</span>
+        <c-card-header-actions style="margin-left: auto">
+          <select cSelect [(ngModel)]="selectedAssetId">
+            @if (isLoading) {
+            <option value="" disabled selected>Loading...</option>
+            } @for (asset of assets; track asset.assetId) {
+            <option value="{{ asset.assetId }}">{{ asset.name }}</option>
+            }
+          </select>
+        </c-card-header-actions>
+      </c-card-header>
       <c-card-body>
-        @if (isLoading) {
+        @if (isLoadingPriceHistory) {
         <div
           class="d-flex justify-content-center align-items-center"
           style="height: 18.75rem"
@@ -12,7 +23,7 @@
         </div>
         } @else {
         <c-chart
-          type="bar"
+          [type]="priceHistory.length === 1 ? 'bar' : 'line'"
           [data]="chartBarData"
           [options]="options"
           [height]="300"

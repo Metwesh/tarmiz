@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ChartData, ChartOptions } from 'chart.js';
-import { SYSTEM_ENUMS } from '../../constants/enums';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
-  CardBodyComponent,
-  CardComponent,
-  CardHeaderComponent,
+  CardModule,
   ColComponent,
+  FormSelectDirective,
   RowComponent,
   SpinnerComponent,
   TextColorDirective,
 } from '@coreui/angular';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
-import { EnumService } from '../../services/enum-service.service';
+import { ChartData, ChartOptions } from 'chart.js';
 import { IAsset } from '../assets-list/asset-list.types';
+import { PriceHistory, PricePoint } from '../../@types/price-history';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,18 +21,25 @@ import { IAsset } from '../assets-list/asset-list.types';
     RowComponent,
     ColComponent,
     TextColorDirective,
-    CardComponent,
-    CardHeaderComponent,
-    CardBodyComponent,
+    CardModule,
     ChartjsComponent,
     SpinnerComponent,
+    FormSelectDirective,
+    FormsModule,
   ],
+  providers: [DatePipe],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
   assets: IAsset[] = [];
+  priceHistory: Array<
+    Omit<PricePoint, 'time'> & {
+      time: string; // Formatted date string
+    }
+  > = [];
   isLoading = true;
+  isLoadingPriceHistory = true;
 
   options: ChartOptions = {
     maintainAspectRatio: false,
@@ -48,7 +55,19 @@ export class DashboardComponent implements OnInit {
   chartPieData: ChartData = { labels: [], datasets: [] };
   chartDoughnutData: ChartData = { labels: [], datasets: [] };
 
-  constructor(private http: HttpClient) {}
+  private _selectedAssetId = '';
+
+  constructor(private http: HttpClient, private datePipe: DatePipe) {}
+
+  get selectedAssetId(): string {
+    return this._selectedAssetId;
+  }
+
+  set selectedAssetId(value: string) {
+    if (!value) return;
+    this._selectedAssetId = value;
+    this.fetchPriceHistory();
+  }
 
   ngOnInit() {
     this.http
@@ -58,6 +77,7 @@ export class DashboardComponent implements OnInit {
           this.assets = assets;
           this.isLoading = false;
           this.updateCharts();
+          this.selectedAssetId = `${this.assets[0]?.assetId}` || '';
         },
         error: (err) => {
           console.error('Failed to load assets:', err);
@@ -66,20 +86,78 @@ export class DashboardComponent implements OnInit {
       });
   }
 
-  updateCharts() {
-    if (!this.assets.length) return;
+  fetchPriceHistory() {
+    this.isLoadingPriceHistory = true;
+    const assetId = this.selectedAssetId;
+    const market = '818'; // EGYPT market
+    if (!assetId) {
+      this.isLoadingPriceHistory = false;
+      return;
+    }
+    this.http
+      .get<PriceHistory>(`/assets/price/history/${assetId}/${market}`)
+      .subscribe({
+        next: (data) => {
+          this.priceHistory = data.prices
+            .map((item) => ({
+              time: this.datePipe.transform(item.time * 1000) ?? '', // Convert UNIX timestamp
+              bid: item.bid,
+              ask: item.ask,
+            }))
+            .reverse(); // Reverse to show the latest prices first
+          this.isLoadingPriceHistory = false;
+          this.updatePriceHistoryChart();
+        },
+        error: (err) => {
+          console.error('Failed to fetch price history:', err);
+          this.isLoadingPriceHistory = false;
+        },
+      });
+  }
 
-    // 📊 Bar Chart: Asset Supply
+  updatePriceHistoryChart() {
+    const bidPriceOptions =
+      this.priceHistory.length === 1
+        ? {
+            backgroundColor: '#08D0DD',
+          }
+        : {
+            borderColor: '#08D0DD',
+            backgroundColor: 'rgba(8, 208, 221, 0.2)',
+          };
+    const askPriceOptions =
+      this.priceHistory.length === 1
+        ? {
+            backgroundColor: '#FF5733',
+          }
+        : {
+            borderColor: '#FF5733',
+            backgroundColor: 'rgba(255, 87, 51, 0.2)',
+          };
+    // 📊 Bar or Line Chart: Bid & Asking prices
     this.chartBarData = {
-      labels: this.assets.map((asset) => asset.name),
+      labels: this.priceHistory.map((item) =>
+        this.datePipe.transform(item.time)
+      ),
       datasets: [
         {
-          label: 'Total Supply',
-          backgroundColor: '#08D0DD',
-          data: this.assets.map((asset) => asset.supply),
+          ...bidPriceOptions,
+          label: 'Bid Price',
+          data: this.priceHistory.map((item) => item.bid),
+          fill: true,
+        },
+        {
+          ...askPriceOptions,
+          label: 'Ask Price',
+          data: this.priceHistory.map((item) => item.ask),
+          fill: true,
         },
       ],
     };
+  }
+
+  updateCharts() {
+    if (!this.assets.length) return;
 
     // 🥧 Pie Chart: Asset Type Distribution
     const assetTypeMap = new Map<string, number>();

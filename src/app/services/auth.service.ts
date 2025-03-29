@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { TokenService } from './token.service';
 import { Router } from '@angular/router';
+import { IUser } from '../@types/user';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +16,8 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private userService: UserService
   ) {
     this.checkAuthStatus();
   }
@@ -27,6 +30,7 @@ export class AuthService {
           next: (response) => {
             this.tokenService.setToken(response.token);
             this.authSubject.next(true);
+            this.validateToken();
             resolve(true);
           },
           error: (err) => {
@@ -40,6 +44,7 @@ export class AuthService {
 
   logout(): void {
     this.tokenService.clearToken();
+    this.userService.clearUser();
     this.authSubject.next(false);
     setTimeout(() => this.router.navigate(['/login']), 0);
   }
@@ -49,17 +54,20 @@ export class AuthService {
       const token = this.tokenService.getToken();
       if (!token) return resolve(false);
 
-      this.http
-        .get<{ info: { accountId: number } }>('/account/info')
-        .subscribe({
-          next: (res) => {
-            resolve(!!res?.info?.accountId);
-          },
-          error: (err) => {
-            console.log('Token validation failed', err);
+      this.http.get<{ info: IUser }>('/account/info').subscribe({
+        next: (res) => {
+          if (!!res?.info?.accountId) {
+            this.userService.setUser(res.info);
+            resolve(true);
+          } else {
             resolve(false);
-          },
-        });
+          }
+        },
+        error: (err) => {
+          console.log('Token validation failed', err);
+          resolve(false);
+        },
+      });
     });
   }
 
@@ -70,10 +78,14 @@ export class AuthService {
     this.validateToken()
       .then((isValid) => {
         this.authSubject.next(isValid);
-        if (!isValid) this.logout();
+        if (!isValid) {
+          this.userService.clearUser();
+          this.logout();
+        }
       })
       .catch(() => {
         this.authSubject.next(false);
+        this.userService.clearUser();
         this.logout();
       });
   }

@@ -25,8 +25,16 @@
               <th class="bg-body-tertiary">Transfer Type</th>
               <th class="bg-body-tertiary">Address</th>
               <th class="bg-body-tertiary">Tokens</th>
-              <th class="bg-body-tertiary">Token Price</th>
-              <th class="bg-body-tertiary">Value</th>
+              <th class="bg-body-tertiary">
+                Price @if (transactions.length > 0) { ({{
+                  transactions[0].paymentDetails.currencyCode
+                }}) }
+              </th>
+              <th class="bg-body-tertiary">
+                Value @if (transactions.length > 0) { ({{
+                  transactions[0].paymentDetails.currencyCode
+                }}) }
+              </th>
               <th class="bg-body-tertiary"></th>
             </tr>
           </thead>
@@ -107,7 +115,17 @@
                 </p>
               </td>
             </tr>
-            } } @else { @for (transaction of transactions; track
+            } } @else if (!isLoading && transactions.length === 0 ) {
+            <tr>
+              <td
+                style="padding-top: 10rem; padding-bottom: 10rem"
+                colspan="4"
+                class="text-center"
+              >
+                No transactions available
+              </td>
+            </tr>
+            } @else { @for (transaction of transactions; track
             transaction.transferId; let i = $index) {
             <tr
               [routerLink]="[
@@ -117,7 +135,7 @@
               ]"
               style="cursor: pointer"
             >
-              <td>{{ transaction.time | date : "short" }}</td>
+              <td>{{ transaction.time * 1000 | date : "short" }}</td>
               <td>{{ transaction.assetSymbol }}</td>
               <td
                 [class]="{
@@ -137,22 +155,10 @@
               </td>
               <td>{{ transaction.tokens }}</td>
               <td>
-                {{
-                  transaction.tokenPrice
-                    | currency
-                      : transaction.paymentDetails.currencyCode
-                      : "symbol"
-                      : "1.2-2"
-                }}
+                {{ transaction.tokenPrice | number : "1.2-5" }}
               </td>
               <td>
-                {{
-                  transaction.paymentDetails.credit
-                    | currency
-                      : transaction.paymentDetails.currencyCode
-                      : "symbol"
-                      : "1.2-2"
-                }}
+                {{ transaction.paymentDetails.credit | number : "1.2-5" }}
               </td>
               <td>
                 <svg cIcon name="cilChevronRight"></svg>
