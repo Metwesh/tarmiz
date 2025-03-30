@@ -35,149 +35,154 @@
           </c-badge>
         </c-card-header>
         <c-card-body>
-          <c-row>
+          <c-row [gutter]="2" class="mb-4">
             <!-- Left Column -->
-            <c-col md="6">
-              <p>
-                <strong>Name: </strong> @if (isAssetLoading) {
-                <span cPlaceholderAnimation="glow">
-                  <span
-                    cPlaceholder
-                    style="width: 5rem; border-radius: 1rem"
-                  ></span>
-                </span>
-                } @else { {{ asset?.name }} }
-              </p>
+            <c-col lg="3" xs="6"><strong>Name:</strong></c-col>
+            <c-col lg="3" xs="6"
+              >@if (isAssetLoading) {
+              <span cPlaceholderAnimation="glow">
+                <span
+                  cPlaceholder
+                  style="width: 5rem; border-radius: 1rem"
+                ></span>
+              </span>
+              } @else { {{ asset?.name }} }</c-col
+            >
 
-              <p>
-                <strong>Symbol: </strong> @if (isAssetLoading) {
-                <span cPlaceholderAnimation="glow">
-                  <span
-                    cPlaceholder
-                    style="width: 5rem; border-radius: 1rem"
-                  ></span>
-                </span>
-                } @else { {{ asset?.symbol }} }
-              </p>
+            <c-col lg="3" xs="6"><strong>Symbol:</strong></c-col>
+            <c-col lg="3" xs="6"
+              >@if (isAssetLoading) {
+              <span cPlaceholderAnimation="glow">
+                <span
+                  cPlaceholder
+                  style="width: 5rem; border-radius: 1rem"
+                ></span>
+              </span>
+              } @else { {{ asset?.symbol }} }</c-col
+            >
 
-              <p>
-                <strong>Asset Type: </strong> @if (isAssetLoading) {
-                <span cPlaceholderAnimation="glow">
-                  <span
-                    cPlaceholder
-                    style="width: 5rem; border-radius: 1rem"
-                  ></span>
-                </span>
-                } @else { {{ asset?.assetTypeName }} }
-              </p>
+            <c-col lg="3" xs="6"><strong>Asset Type:</strong></c-col>
+            <c-col lg="3" xs="6"
+              >@if (isAssetLoading) {
+              <span cPlaceholderAnimation="glow">
+                <span
+                  cPlaceholder
+                  style="width: 5rem; border-radius: 1rem"
+                ></span>
+              </span>
+              } @else { {{ asset?.assetTypeName }} }</c-col
+            >
 
-              <p>
-                <strong>Supply Type: </strong> @if (isAssetLoading) {
-                <span cPlaceholderAnimation="glow">
-                  <span
-                    cPlaceholder
-                    style="width: 5rem; border-radius: 1rem"
-                  ></span>
-                </span>
-                } @else { {{ asset?.supplyTypeName }} }
-              </p>
+            <c-col lg="3" xs="6"><strong>Supply Type:</strong></c-col>
+            <c-col lg="3" xs="6"
+              >@if (isAssetLoading) {
+              <span cPlaceholderAnimation="glow">
+                <span
+                  cPlaceholder
+                  style="width: 5rem; border-radius: 1rem"
+                ></span>
+              </span>
+              } @else { {{ asset?.supplyTypeName }} }</c-col
+            >
 
-              <p>
-                <strong>Supply: </strong> @if (isAssetLoading) {
-                <span cPlaceholderAnimation="glow">
-                  <span
-                    cPlaceholder
-                    style="width: 5rem; border-radius: 1rem"
-                  ></span>
-                </span>
-                } @else { {{ asset?.supply | number : "1.0" }} }
-              </p>
-            </c-col>
+            <c-col lg="3" xs="6"><strong>Supply:</strong></c-col>
+            <c-col lg="3" xs="6"
+              >@if (isAssetLoading) {
+              <span cPlaceholderAnimation="glow">
+                <span
+                  cPlaceholder
+                  style="width: 5rem; border-radius: 1rem"
+                ></span>
+              </span>
+              } @else { {{ asset?.supply | number : "1.0" }} }</c-col
+            >
+          </c-row>
 
-            <!-- Right Column -->
-            <c-col md="6">
-              <p>
-                <strong>Pricing Model: </strong> @if (isAssetLoading) {
-                <span cPlaceholderAnimation="glow">
-                  <span
-                    cPlaceholder
-                    style="width: 5rem; border-radius: 1rem"
-                  ></span>
-                </span>
-                } @else { {{ asset?.pricingModelName }} }
-              </p>
+          <c-row [gutter]="2" class="mb-4">
+            <c-col lg="3" xs="6"><strong>Pricing Model:</strong></c-col>
+            <c-col lg="3" xs="6"
+              >@if (isAssetLoading) {
+              <span cPlaceholderAnimation="glow">
+                <span
+                  cPlaceholder
+                  style="width: 5rem; border-radius: 1rem"
+                ></span>
+              </span>
+              } @else { {{ asset?.pricingModelName }} }</c-col
+            >
 
-              <p>
-                <strong>Trading Model: </strong> @if (isAssetLoading) {
-                <span cPlaceholderAnimation="glow">
-                  <span
-                    cPlaceholder
-                    style="width: 5rem; border-radius: 1rem"
-                  ></span>
-                </span>
-                } @else { {{ asset?.tradingModelName }} }
-              </p>
+            <c-col lg="3" xs="6"><strong>Trading Model:</strong></c-col>
+            <c-col lg="3" xs="6"
+              >@if (isAssetLoading) {
+              <span cPlaceholderAnimation="glow">
+                <span
+                  cPlaceholder
+                  style="width: 5rem; border-radius: 1rem"
+                ></span>
+              </span>
+              } @else { {{ asset?.tradingModelName }} }</c-col
+            >
 
-              <p>
-                <strong>Execution Model: </strong> @if (isAssetLoading) {
-                <span cPlaceholderAnimation="glow">
-                  <span
-                    cPlaceholder
-                    style="width: 5rem; border-radius: 1rem"
-                  ></span>
-                </span>
-                } @else { {{ asset?.executionModelName }} }
-              </p>
+            <c-col lg="3" xs="6"><strong>Execution Model:</strong></c-col>
+            <c-col lg="3" xs="6"
+              >@if (isAssetLoading) {
+              <span cPlaceholderAnimation="glow">
+                <span
+                  cPlaceholder
+                  style="width: 5rem; border-radius: 1rem"
+                ></span>
+              </span>
+              } @else { {{ asset?.executionModelName }} }</c-col
+            >
 
-              <p>
-                <strong>User Level: </strong> @if (isAssetLoading) {
-                <span cPlaceholderAnimation="glow">
-                  <span
-                    cPlaceholder
-                    style="width: 5rem; border-radius: 1rem"
-                  ></span>
-                </span>
-                } @else { {{ asset?.levelName }} }
-              </p>
+            <c-col lg="3" xs="6"><strong>User Level:</strong></c-col>
+            <c-col lg="3" xs="6"
+              >@if (isAssetLoading) {
+              <span cPlaceholderAnimation="glow">
+                <span
+                  cPlaceholder
+                  style="width: 5rem; border-radius: 1rem"
+                ></span>
+              </span>
+              } @else { {{ asset?.levelName }} }</c-col
+            >
+          </c-row>
 
-              <p>
-                <strong>Asset lock state: </strong>
+          <c-row [gutter]="2" class="mb-4">
+            <c-col lg="3" xs="6"><strong>Asset Lock State:</strong></c-col>
+            <c-col lg="9" xs="6"
+              >@if (isAssetLoading) {
+              <span cPlaceholderAnimation="glow">
+                <span
+                  cPlaceholder
+                  style="width: 5rem; border-radius: 1rem"
+                ></span>
+              </span>
+              } @else {
+              {{ asset?.locked ? "Locked" : "Unlocked" }}
+              <c-badge [color]="asset?.locked ? 'danger' : 'success'" size="sm">
+                <svg
+                  cIcon
+                  [name]="asset?.locked ? 'cilX' : 'cilCheckAlt'"
+                ></svg>
+              </c-badge>
+              }</c-col
+            >
+          </c-row>
+
+          <c-row [gutter]="2">
+            <c-col lg="3" xs="6"><strong>Contract:</strong></c-col>
+            <c-col lg="9" xs="6">
+              <code class="text-success">
                 @if (isAssetLoading) {
                 <span cPlaceholderAnimation="glow">
                   <span
                     cPlaceholder
-                    style="width: 5rem; border-radius: 1rem"
-                  ></span> </span
-                >} @else {
-                {{ asset?.locked ? "Locked" : "Unlocked" }}
-                <c-badge
-                  [color]="asset?.locked ? 'danger' : 'success'"
-                  size="sm"
-                >
-                  <svg
-                    cIcon
-                    [name]="asset?.locked ? 'cilX' : 'cilCheckAlt'"
-                  ></svg>
-                </c-badge>
-                }
-              </p>
-            </c-col>
-          </c-row>
-          <c-row>
-            <c-col>
-              <p>
-                <strong>Contract: </strong>
-                <code class="text-success">
-                  @if (isAssetLoading) {
-                  <span cPlaceholderAnimation="glow">
-                    <span
-                      cPlaceholder
-                      style="width: 20rem; border-radius: 1rem"
-                    ></span>
-                  </span>
-                  } @else { {{ asset?.contract }} }
-                </code>
-              </p>
+                    style="width: 20rem; border-radius: 1rem"
+                  ></span>
+                </span>
+                } @else { {{ asset?.contract }} }
+              </code>
             </c-col>
           </c-row>
         </c-card-body>
