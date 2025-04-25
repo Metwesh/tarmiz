@@ -20,6 +20,11 @@ export interface EnumMarketInfoData {
   countries: MarketInfo[];
 }
 
+export interface ApiSysVars {
+  sysvarId: number;
+  name: string;
+}
+
 export interface SysVars {
   id: number;
   name: string;
@@ -27,5 +32,5 @@ export interface SysVars {
 
 export interface EnumApiData {
   count: number;
-  sysvars: SysVars[];
+  sysvars: ApiSysVars[];
 }

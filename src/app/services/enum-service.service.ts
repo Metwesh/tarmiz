@@ -7,6 +7,7 @@ import {
   SysVars,
   EnumMapping,
   EnumMarketInfoData,
+  ApiSysVars,
 } from '../@types/enums';
 import { SelectOption } from '../@types/generic';
 
@@ -44,6 +45,7 @@ export class EnumService {
     const enumData = this.enumSubjects[key]?.value || {};
 
     if (asList) {
+      Object.entries(enumData);
       return Object.entries(enumData).map(
         ([value, label]) =>
           ({
@@ -60,8 +62,8 @@ export class EnumService {
     key: (typeof SYSTEM_ENUMS)[keyof typeof SYSTEM_ENUMS]
   ): Promise<SysVars[]> {
     if (this.cache[key]) {
-      return Object.entries(this.cache[key]).map(([id, name]) => ({
-        id: Number(id),
+      return Object.entries(this.cache[key]).map(([sysvarId, name]) => ({
+        id: Number(sysvarId),
         name,
       }));
     }
@@ -80,7 +82,12 @@ export class EnumService {
             name: country.fullName,
           })) || [];
       } else {
-        data = response.sysvars || [];
+        data = response.sysvars
+          ? response.sysvars.map(({ sysvarId, name }) => ({
+              id: sysvarId,
+              name,
+            }))
+          : [];
       }
 
       // Store in cache

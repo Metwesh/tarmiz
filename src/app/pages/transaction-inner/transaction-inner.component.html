@@ -20,7 +20,15 @@
     <c-card-body>
       <c-row class="gy-3 mb-4">
         <c-col xs="12">
-          <c-card>
+          <c-card
+            style="cursor: pointer"
+            [routerLink]="[
+              '/users',
+              contractAddress === transaction?.from
+                ? transaction?.toId
+                : transaction?.fromId
+            ]"
+          >
             <c-card-header> Address </c-card-header>
             <c-card-body>
               <code class="text-break text-primary text-center d-block">
@@ -50,67 +58,87 @@
           <c-card class="h-100">
             <c-card-header class="fw-semibold">Transfer Info</c-card-header>
             <ul cListGroup flush>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Type: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-50"
-                  ></span
-                ></span>
-                } @else {
-                {{ transaction?.action }}
-                }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-50"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{ transaction?.action }}
+                  }
+                </span>
               </li>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Time: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-50"
-                  ></span
-                ></span>
-                } @else {
-                {{ (transaction?.time ?? 0) * 1000 | date : "short" }}
-                }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-50"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{ (transaction?.time ?? 0) * 1000 | date : "short" }}
+                  }
+                </span>
               </li>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Tokens: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-25"
-                  ></span
-                ></span>
-                } @else {
-                {{ transaction?.tokens }}
-                }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-25"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{ transaction?.tokens }}
+                  }
+                </span>
               </li>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Price: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-50"
-                  ></span
-                ></span>
-                } @else {
-                {{
-                  transaction?.price
-                    | currency
-                    : transaction?.asset?.markets?.[0]?.currencyCode
-                      : "EGP "
-                      : "1.2-5"
-                }}
-                }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-50"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{
+                    transaction?.price
+                      | currency
+                      : transaction?.asset?.markets?.[0]?.currencyCode
+                        : transaction?.asset?.markets?.[0]?.currencyCode + " "
+                        : "1.2-5"
+                  }}
+                  }
+                </span>
               </li>
             </ul>
           </c-card>
@@ -121,61 +149,81 @@
           <c-card class="h-100">
             <c-card-header class="fw-semibold">Asset Details</c-card-header>
             <ul cListGroup flush>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Asset ID: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-75"
-                  ></span
-                ></span>
-                } @else {
-                {{ transaction?.assetId }}
-                }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-75"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{ transaction?.assetId }}
+                  }
+                </span>
               </li>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Name: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-50"
-                  ></span
-                ></span>
-                } @else {
-                {{ transaction?.asset?.name }}
-                }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-50"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{ transaction?.asset?.name }}
+                  }
+                </span>
               </li>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Symbol: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-25"
-                  ></span
-                ></span>
-                } @else {
-                {{ transaction?.asset?.symbol }}
-                }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-25"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{ transaction?.asset?.symbol }}
+                  }
+                </span>
               </li>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Type: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-50"
-                  ></span
-                ></span>
-                } @else {
-                {{ transaction?.asset?.assetTypeName }}
-                }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-50"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{ transaction?.asset?.assetTypeName }}
+                  }
+                </span>
               </li>
             </ul>
           </c-card>
@@ -188,34 +236,44 @@
           <c-card class="h-100">
             <c-card-header class="fw-semibold">Market Details</c-card-header>
             <ul cListGroup flush>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Market: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-50"
-                  ></span
-                ></span>
-                } @else {
-                {{ transaction?.payment?.marketNameFull }} ({{
-                  transaction?.payment?.marketNameShort
-                }}) }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-50"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{ transaction?.payment?.marketNameFull }} ({{
+                    transaction?.payment?.marketNameShort
+                  }}) }
+                </span>
               </li>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Currency: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-50"
-                  ></span
-                ></span>
-                } @else {
-                {{ transaction?.payment?.currencyName }}
-                ({{ transaction?.payment?.currencyCode }}) }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-50"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{ transaction?.payment?.currencyName }}
+                  ({{ transaction?.payment?.currencyCode }}) }
+                </span>
               </li>
             </ul>
           </c-card>
@@ -226,39 +284,49 @@
           <c-card class="h-100">
             <c-card-header class="fw-semibold">Payment Details</c-card-header>
             <ul cListGroup flush>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Payment ID: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-50"
-                  ></span
-                ></span>
-                } @else {
-                {{ transaction?.payment?.transferId }}
-                }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-50"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{ transaction?.payment?.transferId }}
+                  }
+                </span>
               </li>
-              <li cListGroupItem>
+              <li
+                class="d-flex align-items-center justify-content-between"
+                cListGroupItem
+              >
                 <strong>Credit: </strong>
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-50"
-                  ></span
-                ></span>
-                } @else {
-                {{
-                  (transaction?.tokens ?? 0) * (transaction?.price ?? 0)
-                    | currency
-                    : transaction?.asset?.markets?.[0]?.currencyCode
-                      : "EGP "
-                      : "1.2-5"
-                }}
-                }
+                <span>
+                  @if (isTransactionLoading) {
+                  <span cPlaceholderAnimation="glow"
+                    ><span
+                      cPlaceholder
+                      style="border-radius: 1rem"
+                      class="w-50"
+                    ></span
+                  ></span>
+                  } @else {
+                  {{
+                    (transaction?.tokens ?? 0) * (transaction?.price ?? 0)
+                      | currency
+                      : transaction?.asset?.markets?.[0]?.currencyCode
+                        : transaction?.asset?.markets?.[0]?.currencyCode + " "
+                        : "1.2-5"
+                  }}
+                  }
+                </span>
               </li>
             </ul>
           </c-card>

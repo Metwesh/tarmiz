@@ -88,7 +88,9 @@
               style="cursor: pointer"
             >
               <td>{{ index + 1 }}</td>
-              <td>{{ subscriber.subscriber.name }}</td>
+              <td>
+                <code>{{ subscriber.subscriber.address }}</code>
+              </td>
               <td>{{ subscriber.balance | number : "1.0" }}</td>
               <td>{{ subscriber.stateName }}</td>
               <td class="text-end px-2">

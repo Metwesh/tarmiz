@@ -1,9 +1,8 @@
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
-  ButtonDirective,
   CardBodyComponent,
   CardComponent,
   CardHeaderComponent,
@@ -11,12 +10,10 @@ import {
   PlaceholderAnimationDirective,
   PlaceholderDirective,
   RowComponent,
-  SpinnerComponent,
   TableDirective,
-  TextColorDirective,
+  TextColorDirective
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
-import { IAsset } from '../assets-list/asset-list.types';
 import { IAssetHolding } from '../subscribers-list/subscribers-list.types';
 
 @Component({
