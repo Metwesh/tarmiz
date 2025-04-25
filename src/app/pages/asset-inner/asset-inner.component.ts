@@ -26,6 +26,7 @@ import { IAssetHolding } from '../subscribers-list/subscribers-list.types';
 import { ChartData, ChartOptions } from 'chart.js';
 import { PriceHistory, PricePoint } from '../../@types/price-history';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
+import { PriceAddModalComponent } from '../../components/price-add-modal/price-add-modal.component';
 
 @Component({
   selector: 'app-asset-inner',
@@ -50,6 +51,7 @@ import { ChartjsComponent } from '@coreui/angular-chartjs';
     ChartjsComponent,
     SpinnerComponent,
     GutterDirective,
+    PriceAddModalComponent
   ],
   providers: [DatePipe],
   templateUrl: './asset-inner.component.html',
@@ -76,6 +78,8 @@ export class AssetInnerComponent implements OnInit {
 
   isAssetStateModalOpen = false;
   assetState: number | undefined;
+
+  isPriceAddModalOpen = false;
 
   isLoadingPriceHistory = true;
 
@@ -186,6 +190,14 @@ export class AssetInnerComponent implements OnInit {
     if (state === undefined) return;
     this.assetState = state;
     this.openAssetStateModal();
+  }
+
+  openPriceAddModal() {
+    this.isPriceAddModalOpen = true;
+  }
+
+  closePriceAddModal() {
+    this.isPriceAddModalOpen = false;
   }
 
   openAssetStateModal() {

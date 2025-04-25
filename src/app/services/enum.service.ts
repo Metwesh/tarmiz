@@ -79,7 +79,7 @@ export class EnumService {
       if ('countries' in response) {
         data =
           response.countries?.map((country) => ({
-            id: country.countryId,
+            id: country.countryCode,
             name: country.shortName,
           })) || [];
       } else {

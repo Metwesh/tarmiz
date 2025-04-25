@@ -266,8 +266,20 @@
   <c-row class="mt-4 justify-content-center">
     <c-col md="8">
       <c-card>
-        <c-card-header>
+        <c-card-header
+          class="d-flex align-items-center justify-content-between"
+        >
           <strong>Prices</strong>
+          <c-card-header-actions>
+            <button
+              cButton
+              color="primary"
+              size="sm"
+              (click)="openPriceAddModal()"
+            >
+              Add Price
+            </button>
+          </c-card-header-actions>
         </c-card-header>
         <c-card-body>
           <table cTable [hover]="true" [responsive]="true" [striped]="true">
@@ -503,4 +515,10 @@
   [assetState]="assetState"
   (close)="closeAssetStateModal()"
   (revalidate)="refetchAssetDetails()"
+/>
+
+<app-price-add-modal
+  [visible]="isPriceAddModalOpen"
+  (revalidate)="refetchAssetDetails()"
+  (close)="closePriceAddModal()"
 />
