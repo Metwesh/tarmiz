@@ -519,6 +519,7 @@
 
 <app-price-add-modal
   [visible]="isPriceAddModalOpen"
+  [assetName]="asset?.name"
   (revalidate)="refetchAssetDetails()"
   (close)="closePriceAddModal()"
 />

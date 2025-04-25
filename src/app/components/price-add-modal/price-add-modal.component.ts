@@ -53,6 +53,10 @@ export class PriceAddModalComponent {
     required: true,
   })
   visible!: boolean;
+  @Input({
+    required: true,
+  })
+  assetName?: string;
 
   @Output() close = new EventEmitter<void>();
   @Output() revalidate = new EventEmitter<void>();

@@ -13,6 +13,9 @@
       <c-card-header class="fw-bold">Asset Details</c-card-header>
       <c-card-body>
         <p class="m-0"><strong>Asset ID:</strong> {{ assetId }}</p>
+        @if (assetName) {
+        <p class="m-0"><strong>Asset Name:</strong> {{ assetName }}</p>
+        }
       </c-card-body>
     </c-card>
     <form
