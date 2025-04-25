@@ -3,15 +3,16 @@ export interface EnumMapping {
 }
 
 export interface MarketInfo {
-  id: 1;
-  code: 818;
-  nameShort: 'Egypt';
-  nameFull: 'The Arab Republic of Egypt';
-  alpha2Code: 'EG';
-  alpha3Code: 'EGY';
-  currency: 'Egyptian Pound';
-  currencyCode: 'EGP';
-  callingCode: 20;
+  _id: string;
+  countryId: number;
+  shortName: string;
+  fullName: string;
+  alpha2Code: string;
+  alpha3Code: string;
+  currencyName: string;
+  currencyCode: string;
+  callingCode: number;
+  countryCode: number;
 }
 
 export interface EnumMarketInfoData {

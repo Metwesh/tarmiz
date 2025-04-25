@@ -54,17 +54,17 @@ export class AuthService {
       const token = this.tokenService.getToken();
       if (!token) return resolve(false);
 
-      this.http.get<{ info: IUser }>('/account/info').subscribe({
+      this.http.get<IUser>('/account/info').subscribe({
         next: (res) => {
-          if (!!res?.info?.accountId) {
-            this.userService.setUser(res.info);
+          if (!!res?.accountId) {
+            this.userService.setUser(res);
             resolve(true);
           } else {
             resolve(false);
           }
         },
         error: (err) => {
-          console.log('Token validation failed', err);
+          console.warn('Token validation failed', err);
           resolve(false);
         },
       });

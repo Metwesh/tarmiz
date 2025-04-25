@@ -14,7 +14,8 @@ import {
   TextColorDirective,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
-import { ITransaction, ITransfer } from './transaction-list.types';
+import { ITransfer } from './transaction-list.types';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-transaction-list',
@@ -38,28 +39,30 @@ import { ITransaction, ITransfer } from './transaction-list.types';
   styleUrl: './transaction-list.component.scss',
 })
 export class TransactionListComponent {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private userService: UserService) {}
 
-  transactions: Array<ITransfer & Record<'contractAddress', string>> = [];
+  contractAddress: string | null = null;
+
+  transactions: ITransfer[] = [];
 
   isLoading = true;
 
   ngOnInit() {
+    this.userService.getUser().subscribe((user) => {
+      this.contractAddress =
+        user?.contacts?.find((item) => item.typeName === 'Email')?.address ||
+        null;
+    });
     this.http
-      .get<{ count: number; transfers: ITransaction[] }>('/assets/trxs')
+      .get<{ count: number; transfers: ITransfer[] }>(
+        '/issuer/asset/transfers/100'
+      )
       .subscribe({
         next: ({ transfers }) => {
-          this.transactions = transfers.flatMap((trx) =>
-            trx.trxs.map((tInner) => ({
-              ...tInner,
-              contractAddress: trx?.contractAddress ?? '',
-            }))
-          );
-
+          this.transactions = transfers;
           this.isLoading = false;
         },
         error: () => {
-          console.log('Failed to load transactions');
           this.isLoading = false;
         },
       });

@@ -1,5 +1,6 @@
+import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CardModule,
@@ -7,13 +8,16 @@ import {
   FormSelectDirective,
   RowComponent,
   SpinnerComponent,
+  TemplateIdDirective,
   TextColorDirective,
+  WidgetStatFComponent,
 } from '@coreui/angular';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
+import { IconDirective } from '@coreui/icons-angular';
 import { ChartData, ChartOptions } from 'chart.js';
-import { IAsset } from '../assets-list/asset-list.types';
 import { PriceHistory, PricePoint } from '../../@types/price-history';
-import { DatePipe } from '@angular/common';
+import { IAsset } from '../assets-list/asset-list.types';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,12 +30,17 @@ import { DatePipe } from '@angular/common';
     SpinnerComponent,
     FormSelectDirective,
     FormsModule,
+    WidgetStatFComponent,
+    TemplateIdDirective,
+    IconDirective,
+    RouterLink,
   ],
   providers: [DatePipe],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
+  assetCount: number | string = '...';
   assets: IAsset[] = [];
   priceHistory: Array<
     Omit<PricePoint, 'time'> & {
@@ -49,6 +58,9 @@ export class DashboardComponent implements OnInit {
     ...this.options,
     normalized: true,
   };
+
+  userCount: number | string = '...';
+  totalAUM: number | string = '...';
 
   // Chart Data
   chartBarData: ChartData = { labels: [], datasets: [] };
@@ -71,9 +83,10 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.http
-      .get<{ count: number; assets: IAsset[] }>('/assets/list')
+      .get<{ count: number; assets: IAsset[] }>('/asset/list')
       .subscribe({
-        next: ({ assets }) => {
+        next: ({ count, assets }) => {
+          this.assetCount = count;
           this.assets = assets;
           this.isLoading = false;
           this.updateCharts();
@@ -81,7 +94,20 @@ export class DashboardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Failed to load assets:', err);
+          this.assetCount = 0;
           this.isLoading = false;
+        },
+      });
+    this.http
+      .get<{ count: number; taum: number }>('/issuer/asset/subscriptions')
+      .subscribe({
+        next: ({ count, taum }) => {
+          this.userCount = count;
+          this.totalAUM = taum;
+        },
+        error: () => {
+          this.userCount = 0;
+          this.totalAUM = 0;
         },
       });
   }
@@ -95,7 +121,7 @@ export class DashboardComponent implements OnInit {
       return;
     }
     this.http
-      .get<PriceHistory>(`/assets/price/history/${assetId}/${market}`)
+      .get<PriceHistory>(`/asset/price/history/${assetId}/${market}`)
       .subscribe({
         next: (data) => {
           this.priceHistory = data.prices

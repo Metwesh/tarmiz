@@ -19,11 +19,11 @@
     <c-card-header class="fw-bold">Transfer Details</c-card-header>
     <c-card-body>
       <c-row class="gy-3 mb-4">
-        <c-col xs="12" md="6">
+        <c-col xs="12">
           <c-card>
-            <c-card-header> From </c-card-header>
+            <c-card-header> Address </c-card-header>
             <c-card-body>
-              <code class="text-break text-primary">
+              <code class="text-break text-primary text-center d-block">
                 @if (isTransactionLoading) {
                 <span cPlaceholderAnimation="glow"
                   ><span
@@ -33,27 +33,11 @@
                   ></span
                 ></span>
                 } @else {
-                {{ transaction?.from }}
-                }
-              </code>
-            </c-card-body>
-          </c-card>
-        </c-col>
-        <c-col xs="12" md="6">
-          <c-card>
-            <c-card-header> To </c-card-header>
-            <c-card-body>
-              <code class="text-break">
-                @if (isTransactionLoading) {
-                <span cPlaceholderAnimation="glow"
-                  ><span
-                    cPlaceholder
-                    style="border-radius: 1rem"
-                    class="w-75"
-                  ></span
-                ></span>
-                } @else {
-                {{ transaction?.to }}
+                {{
+                  contractAddress === transaction?.from
+                    ? transaction?.to
+                    : transaction?.from
+                }}
                 }
               </code>
             </c-card-body>
@@ -77,7 +61,7 @@
                   ></span
                 ></span>
                 } @else {
-                {{ transaction?.transferType }}
+                {{ transaction?.action }}
                 }
               </li>
               <li cListGroupItem>
@@ -120,10 +104,10 @@
                 ></span>
                 } @else {
                 {{
-                  transaction?.tokenPrice
+                  transaction?.price
                     | currency
-                      : transaction?.paymentDetails?.currencyCode
-                      : "symbol"
+                    : transaction?.asset?.markets?.[0]?.currencyCode
+                      : "EGP "
                       : "1.2-5"
                 }}
                 }
@@ -162,7 +146,7 @@
                   ></span
                 ></span>
                 } @else {
-                {{ transaction?.assetName }}
+                {{ transaction?.asset?.name }}
                 }
               </li>
               <li cListGroupItem>
@@ -176,7 +160,7 @@
                   ></span
                 ></span>
                 } @else {
-                {{ transaction?.assetSymbol }}
+                {{ transaction?.asset?.symbol }}
                 }
               </li>
               <li cListGroupItem>
@@ -190,7 +174,7 @@
                   ></span
                 ></span>
                 } @else {
-                {{ transaction?.assetTypeName }}
+                {{ transaction?.asset?.assetTypeName }}
                 }
               </li>
             </ul>
@@ -215,8 +199,8 @@
                   ></span
                 ></span>
                 } @else {
-                {{ transaction?.paymentDetails?.marketName }} ({{
-                  transaction?.paymentDetails?.marketShort
+                {{ transaction?.payment?.marketNameFull }} ({{
+                  transaction?.payment?.marketNameShort
                 }}) }
               </li>
               <li cListGroupItem>
@@ -230,8 +214,8 @@
                   ></span
                 ></span>
                 } @else {
-                {{ transaction?.paymentDetails?.currencyName }}
-                ({{ transaction?.paymentDetails?.currencyCode }}) }
+                {{ transaction?.payment?.currencyName }}
+                ({{ transaction?.payment?.currencyCode }}) }
               </li>
             </ul>
           </c-card>
@@ -253,7 +237,7 @@
                   ></span
                 ></span>
                 } @else {
-                {{ transaction?.paymentDetails?.paymentId }}
+                {{ transaction?.payment?.transferId }}
                 }
               </li>
               <li cListGroupItem>
@@ -268,10 +252,10 @@
                 ></span>
                 } @else {
                 {{
-                  transaction?.paymentDetails?.credit
+                  (transaction?.tokens ?? 0) * (transaction?.price ?? 0)
                     | currency
-                      : transaction?.paymentDetails?.currencyCode
-                      : "symbol"
+                    : transaction?.asset?.markets?.[0]?.currencyCode
+                      : "EGP "
                       : "1.2-5"
                 }}
                 }

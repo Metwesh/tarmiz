@@ -21,8 +21,8 @@ import {
 import { IconDirective } from '@coreui/icons-angular';
 import { PriceSetModalComponent } from '../../components/price-set-modal/price-set-modal.component';
 import { SetAssetStateModalComponent } from '../../components/set-asset-state-modal/set-asset-state-modal.component';
-import { AssetPricing, IAssetInner } from '../assets-list/asset-list.types';
-import { ISubscriber } from '../subscribers-list/subscribers-list.types';
+import { AssetPricing, IAsset } from '../assets-list/asset-list.types';
+import { IAssetHolding } from '../subscribers-list/subscribers-list.types';
 import { ChartData, ChartOptions } from 'chart.js';
 import { PriceHistory, PricePoint } from '../../@types/price-history';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
@@ -37,7 +37,6 @@ import { ChartjsComponent } from '@coreui/angular-chartjs';
     CardHeaderComponent,
     CardBodyComponent,
     CardHeaderActionsComponent,
-    IconDirective,
     BadgeComponent,
     BreadcrumbModule,
     RouterLink,
@@ -57,10 +56,10 @@ import { ChartjsComponent } from '@coreui/angular-chartjs';
   styleUrl: './asset-inner.component.scss',
 })
 export class AssetInnerComponent implements OnInit {
-  public asset: IAssetInner | null = null;
+  public asset: IAsset | null = null;
   public isAssetLoading = true;
 
-  public subscribers: ISubscriber[] = [];
+  public subscribers: IAssetHolding[] = [];
   public isSubscribersLoading = true;
 
   isPriceSetModalOpen = false;
@@ -114,13 +113,14 @@ export class AssetInnerComponent implements OnInit {
       this.router.navigate(['/404']);
       return;
     }
-    this.http.get<IAssetInner>(`/assets/info/${assetId}`).subscribe({
+
+    this.http.get<IAsset>(`/asset/info/${assetId}`).subscribe({
       next: (asset) => {
         this.asset = asset;
         this.isAssetLoading = false;
         const market = '818'; // EGYPT market
         this.http
-          .get<PriceHistory>(`/assets/price/history/${assetId}/${market}`)
+          .get<PriceHistory>(`/asset/price/history/${assetId}/${market}`)
           .subscribe({
             next: (data) => {
               this.priceHistory = data.prices
@@ -139,8 +139,8 @@ export class AssetInnerComponent implements OnInit {
             },
           });
         this.http
-          .get<{ count: number; subscribers: ISubscriber[] }>(
-            `/assets/subscribers/${asset.contract}`
+          .get<{ count: number; taum: number; subscribers: IAssetHolding[] }>(
+            `/issuer/asset/subscriptions/asset/${asset.assetId}`
           )
           .subscribe({
             next: ({ subscribers }) => {
@@ -167,7 +167,7 @@ export class AssetInnerComponent implements OnInit {
       assetId: +assetId,
       assetName: this.asset?.name ?? '',
       marketId: priceInfo.marketId,
-      marketName: priceInfo.marketName,
+      marketName: priceInfo.marketNameFull,
       ask: priceInfo.ask,
       bid: priceInfo.bid,
     };

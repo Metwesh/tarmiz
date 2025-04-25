@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { environment } from '../env';
 import { CookieService } from '../app/services/cookie.service';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from '../app/services/user.service';
 
 export function authInterceptor(
   req: HttpRequest<unknown>,

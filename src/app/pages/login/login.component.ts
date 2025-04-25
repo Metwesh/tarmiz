@@ -11,6 +11,7 @@ import { Router, RouterLink } from '@angular/router';
 import {
   AlertComponent,
   ButtonDirective,
+  ButtonGroupComponent,
   CardBodyComponent,
   CardComponent,
   CardGroupComponent,
@@ -26,6 +27,7 @@ import {
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 import { AuthService } from '../../services/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -49,7 +51,7 @@ import { AuthService } from '../../services/auth.service';
     ReactiveFormsModule,
     ButtonDirective,
     NgStyle,
-    RouterLink,
+    ButtonGroupComponent,
   ],
 })
 export class LoginComponent {
@@ -60,14 +62,25 @@ export class LoginComponent {
   isLoading = false;
   errorMessage: string = '';
 
+  mailingListForm!: FormGroup<{
+    email: FormControl<string | null>;
+  }>;
+  isMailingListLoading = false;
+  mailingListErrorMessage: string = '';
+  mailingListSuccess = false;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
+    });
+    this.mailingListForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -93,6 +106,33 @@ export class LoginComponent {
       .catch((res) => {
         this.errorMessage = 'Invalid credentials, please try again';
         this.isLoading = false;
+      });
+  }
+
+  onJoinMailingList(): void {
+    if (this.mailingListForm.invalid) {
+      return;
+    }
+    const email = this.mailingListForm.get('email')?.value;
+
+    this.isMailingListLoading = true;
+    this.mailingListErrorMessage = '';
+    this.mailingListSuccess = false;
+
+    // Add your logic here, e.g., call a service to send the email
+    this.http
+      .post('https://srvapi.tarmiiz.com/general/waitlist', { email })
+      .subscribe({
+        next: () => {
+          this.mailingListSuccess = true;
+          this.mailingListErrorMessage = '';
+          this.isMailingListLoading = false;
+        },
+        error: () => {
+          this.mailingListErrorMessage =
+            'An error occurred while joining the mailing list. Please try again.';
+          this.isMailingListLoading = false;
+        },
       });
   }
 }

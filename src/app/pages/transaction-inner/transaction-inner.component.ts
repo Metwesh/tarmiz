@@ -14,6 +14,7 @@ import {
   RowComponent,
 } from '@coreui/angular';
 import { ITransfer } from '../transaction-list/transaction-list.types';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-transaction-inner',
@@ -38,37 +39,32 @@ export class TransactionInnerComponent {
   isTransactionLoading = true;
   transaction: ITransfer | null = null;
 
+  contractAddress: string | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
-    const contract = this.route.snapshot.paramMap.get('address');
+    this.userService.getUser().subscribe((user) => {
+      this.contractAddress =
+        user?.contacts?.find((item) => item.typeName === 'Email')?.address ||
+        null;
+    });
     const trxId = this.route.snapshot.paramMap.get('id');
 
-    if (!trxId || !contract) {
-      this.isTransactionLoading = false;
-      this.router.navigate(['/404']);
-      return;
-    }
-
-    this.http
-      .post<ITransfer>('/assets/trx', {
-        trxId,
-        contract,
-      })
-      .subscribe({
-        next: (transaction) => {
-          this.transaction = transaction;
-          this.isTransactionLoading = false;
-        },
-        error: (error) => {
-          console.error('There was an error!', error);
-          this.isTransactionLoading = false;
-          this.router.navigate(['/404']);
-        },
-      });
+    this.http.get<ITransfer>(`/issuer/asset/transfer/${trxId}`).subscribe({
+      next: (transaction) => {
+        this.transaction = transaction;
+        this.isTransactionLoading = false;
+      },
+      error: () => {
+        this.isTransactionLoading = false;
+        this.router.navigate(['/404']);
+      },
+    });
   }
 }

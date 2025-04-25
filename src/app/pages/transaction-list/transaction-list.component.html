@@ -21,18 +21,18 @@
           <thead class="text-nowrap text-truncate">
             <tr>
               <th class="bg-body-tertiary">Time</th>
-              <th class="bg-body-tertiary">Asset Symbol</th>
-              <th class="bg-body-tertiary">Transfer Type</th>
+              <th class="bg-body-tertiary">Symbol</th>
+              <th class="bg-body-tertiary">Type</th>
               <th class="bg-body-tertiary">Address</th>
               <th class="bg-body-tertiary">Tokens</th>
               <th class="bg-body-tertiary">
                 Price @if (transactions.length > 0) { ({{
-                  transactions[0].paymentDetails.currencyCode
+                  transactions[0].asset.markets[0].currencyCode
                 }}) }
               </th>
               <th class="bg-body-tertiary">
                 Value @if (transactions.length > 0) { ({{
-                  transactions[0].paymentDetails.currencyCode
+                  transactions[0].asset.markets[0].currencyCode
                 }}) }
               </th>
               <th class="bg-body-tertiary"></th>
@@ -119,7 +119,7 @@
             <tr>
               <td
                 style="padding-top: 10rem; padding-bottom: 10rem"
-                colspan="4"
+                colspan="8"
                 class="text-center"
               >
                 No transactions available
@@ -130,24 +130,23 @@
             <tr
               [routerLink]="[
                 '/transactions',
-                transaction.contractAddress,
                 transaction.transferId
               ]"
               style="cursor: pointer"
             >
               <td>{{ transaction.time * 1000 | date : "short" }}</td>
-              <td>{{ transaction.assetSymbol }}</td>
+              <td>{{ transaction.asset.symbol }}</td>
               <td
                 [class]="{
-                    'text-primary': transaction.transferType === 'Buy',
+                    'text-primary': transaction.action === 'Buy',
                   }"
               >
-                {{ transaction.transferType }}
+                {{ transaction.action }}
               </td>
               <td>
                 <code>
                   {{
-                    transaction.contractAddress === transaction.from
+                    contractAddress === transaction.from
                       ? transaction.to
                       : transaction.from
                   }}
@@ -155,10 +154,10 @@
               </td>
               <td>{{ transaction.tokens }}</td>
               <td>
-                {{ transaction.tokenPrice | number : "1.2-5" }}
+                {{ transaction.price | number : "1.2-5" }}
               </td>
               <td>
-                {{ transaction.paymentDetails.credit | number : "1.2-5" }}
+                {{ transaction.tokens * transaction.price | number : "1.2-5" }}
               </td>
               <td>
                 <svg cIcon name="cilChevronRight"></svg>

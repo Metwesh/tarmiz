@@ -42,7 +42,6 @@ import { SYSTEM_ENUMS } from '../../constants/enums';
     AsyncSelectComponent,
     SpinnerComponent,
     AlertComponent,
-    IconDirective,
   ],
   templateUrl: './asset-create.component.html',
   styleUrl: './asset-create.component.scss',
@@ -61,7 +60,7 @@ export class AssetCreateComponent implements OnInit {
     cid: FormControl<string | null>;
     marketId: FormControl<string | null>;
     level: FormControl<string | null>;
-    extra: FormControl<string | null>;
+    // extra: FormControl<string | null>;
   }>;
   submitting = false;
   successMessage = '';
@@ -89,7 +88,7 @@ export class AssetCreateComponent implements OnInit {
       cid: [''],
       marketId: ['', [Validators.required]],
       level: ['', [Validators.required]],
-      extra: [''],
+      // extra: [''],
     });
   }
 

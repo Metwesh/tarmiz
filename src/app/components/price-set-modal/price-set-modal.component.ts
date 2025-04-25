@@ -93,10 +93,11 @@ export class PriceSetModalComponent {
     const apiFormData = {
       assetId: this.formData?.assetId ?? 0,
       marketId: this.formData?.marketId ?? 0,
+      time: Date.now(),
       ...this.priceSetForm.value,
     };
 
-    this.http.post('/assets/price/set', apiFormData).subscribe({
+    this.http.post('/issuer/asset/update/price', apiFormData).subscribe({
       next: () => {
         this.submitting = false;
         this.closeModal();

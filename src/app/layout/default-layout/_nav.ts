@@ -39,24 +39,29 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Users',
-    url: '/users',
-    iconComponent: { name: 'cil-user' },
+    url: '/users/list',
+    iconComponent: { name: 'cil-group' },
   },
   {
-    name: 'Account',
-    url: '/account',
-    iconComponent: { name: 'cil-applications-settings' },
-    children: [
-      {
-        name: 'Utilities',
-        url: '/account/utilities',
-        icon: 'nav-icon-bullet',
-      },
-      {
-        name: 'Profile',
-        url: '/account/profile',
-        icon: 'nav-icon-bullet',
-      },
-    ],
+    name: 'Profile',
+    url: '/account/profile',
+    iconComponent: { name: 'cil-user' },
   },
+  // {
+  //   name: 'Account',
+  //   url: '/account',
+  //   iconComponent: { name: 'cil-applications-settings' },
+  //   children: [
+  //     {
+  //       name: 'Profile',
+  //       url: '/account/profile',
+  //       icon: 'nav-icon-bullet',
+  //     },
+  //     {
+  //       name: 'Utilities',
+  //       url: '/account/utilities',
+  //       icon: 'nav-icon-bullet',
+  //     },
+  //   ],
+  // },
 ];

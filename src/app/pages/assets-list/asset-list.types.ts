@@ -1,18 +1,22 @@
 export interface AssetPricing {
+  _id: string;
+  assetId: number;
   marketId: number;
-  marketName: string;
-  marketShort: string;
-  currencyName: string;
-  currencyCode: string;
   bid: number;
   ask: number;
-  state: number;
-  stateName: string;
-  update: number;
+  time: number;
+  marketNameShort: string;
+  marketNameFull: string;
+  marketCode2: string;
+  marketCode3: string;
+  currencyName: string;
+  currencyCode: string;
 }
 
 export interface IAsset {
+  _id: string;
   assetId: number;
+  accountId: number;
   name: string;
   symbol: string;
   contract: string;
@@ -21,6 +25,7 @@ export interface IAsset {
   assetTypeName: string;
   exclusive: boolean;
   supply: number;
+  circulating: number;
   supplyTypeId: number;
   supplyTypeName: string;
   pricingModelId: number;
@@ -29,20 +34,13 @@ export interface IAsset {
   tradingModelName: string;
   executionModelId: number;
   executionModelName: string;
+  paymentModelId: number;
+  paymentModelName: string;
   cid: string;
-  extra: string;
   time: number;
-  tokens: number;
-  stateId: number;
-  stateName: string;
-  locked: boolean;
-  prices: Array<AssetPricing> | undefined;
-}
-
-export interface IAssetInner extends IAsset {
   levelId: number;
   levelName: string;
-  supplyTypeId: number;
-  supplyTypeName: string;
-  tokens: number;
+  stateId: number;
+  stateName: string;
+  markets: AssetPricing[] | undefined;
 }

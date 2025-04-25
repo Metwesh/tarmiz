@@ -1,0 +1,88 @@
+<c-row class="justify-content-center">
+  <c-col md="8">
+    <c-card>
+      <c-card-header class="d-flex justify-content-between align-items-center">
+        <strong> Account Details </strong>
+        <c-badge color="primary">
+          @if (isProfileLoading) {
+          <span cPlaceholderAnimation="glow">
+            <span cPlaceholder style="width: 7rem; border-radius: 1rem"></span>
+          </span>
+          } @else { ID: {{ userData?.accountId }} }
+        </c-badge>
+      </c-card-header>
+      <c-card-body>
+        <c-row [gutter]="2" class="mb-4">
+          <c-col xs="6"><strong>Account Type:</strong></c-col>
+          <c-col xs="6">
+            @if (isProfileLoading) {
+            <span cPlaceholderAnimation="glow">
+              <span
+                cPlaceholder
+                style="width: 7rem; border-radius: 1rem"
+              ></span>
+            </span>
+            } @else { {{ userData?.accountTypeName }} }
+          </c-col>
+        </c-row>
+
+        <c-row [gutter]="2" class="mb-4">
+          <c-col xs="6"><strong>Country Code</strong> </c-col>
+          <c-col xs="6">
+            @if (isProfileLoading) {
+            <span cPlaceholderAnimation="glow">
+              <span
+                cPlaceholder
+                style="width: 7rem; border-radius: 1rem"
+              ></span>
+            </span>
+            } @else { {{ userData?.countryCode }} }
+          </c-col>
+        </c-row>
+
+        <c-row [gutter]="2" class="mb-4">
+          <c-col xs="6"><strong>Unique ID</strong></c-col>
+          <c-col xs="6">
+            @if (isProfileLoading) {
+            <span cPlaceholderAnimation="glow">
+              <span
+                cPlaceholder
+                style="width: 7rem; border-radius: 1rem"
+              ></span>
+            </span>
+            } @else { <code>{{ userData?.uniqueId }}</code
+            >}
+          </c-col>
+        </c-row>
+
+        <c-row [gutter]="2" class="mb-4">
+          <c-col xs="6"><strong>Level</strong></c-col>
+          <c-col xs="6">
+            @if (isProfileLoading) {
+            <span cPlaceholderAnimation="glow">
+              <span
+                cPlaceholder
+                style="width: 7rem; border-radius: 1rem"
+              ></span>
+            </span>
+            } @else { {{ userData?.levelName }} }
+          </c-col>
+        </c-row>
+
+        <c-row [gutter]="2" class="mb-4">
+          <c-col xs="6"><strong>State</strong></c-col>
+          <c-col xs="6">
+            @if (isProfileLoading) {
+            <span cPlaceholderAnimation="glow">
+              <span
+                cPlaceholder
+                style="width: 7rem; border-radius: 1rem"
+              ></span>
+            </span>
+            } @else { {{ userData?.stateName }} }
+          </c-col>
+        </c-row>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

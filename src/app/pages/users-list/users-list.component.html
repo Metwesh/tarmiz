@@ -1,24 +1,18 @@
 <c-row class="mb-4">
   <c-col>
-    <h3 style="margin: 0">Subscribers</h3>
+    <h3 style="margin: 0">Users</h3>
   </c-col>
 </c-row>
 <c-row>
   <c-col xs>
     <c-card class="mb-4">
       <c-card-header>
-        <h5 class="mb-0">Subscriber List</h5>
+        <h5 class="mb-0">Users List</h5>
       </c-card-header>
 
       <c-card-body>
-        <table
-          [hover]="true"
-          [responsive]="true"
-          [striped]="true"
-          cTable
-          class="mb-0 border"
-        >
-          <thead class="text-nowrap text-truncate">
+        <table cTable [hover]="true" [responsive]="true" [striped]="true">
+          <thead>
             <tr>
               <th class="bg-body-tertiary">#</th>
               <th class="bg-body-tertiary">Subscriber</th>
@@ -78,45 +72,27 @@
               </td>
             </tr>
             } } @else if (!isLoading && subscribers.length === 0 ) {
-            <tr>
+            <tr style="margin-top: 10rem; margin-bottom: 10rem">
               <td
                 style="padding-top: 10rem; padding-bottom: 10rem"
                 colspan="4"
                 class="text-center"
               >
-                No pending subscribers
+                No subscribers available
               </td>
             </tr>
             } @else { @for (subscriber of subscribers; track
             subscriber.subscriber; let index = $index) {
-
-            <tr>
-              <td style="vertical-align: middle">{{ index + 1 }}</td>
-              <td style="vertical-align: middle">
-                {{ subscriber.subscriber.name }}
-              </td>
-              <td style="vertical-align: middle">
-                {{ subscriber.balance | number : "1.0-2" }}
-              </td>
-              <td style="vertical-align: middle">
-                {{ subscriber.stateName }}
-              </td>
-              <td>
-                <div class="d-flex align-items-center justify-content-end">
-                  <button
-                    cButton
-                    [disabled]="submitting"
-                    size="sm"
-                    (click)="approveSubscriber({
-                    subscriber: subscriber.subscriber.address,
-                    assetId: subscriber.assetId,
-                  })"
-                  >
-                    @if (submitting) {
-                    <c-spinner size="sm" />
-                    Loading... } @else { Approve }
-                  </button>
-                </div>
+            <tr
+              [routerLink]="['/users', subscriber.subscriberId]"
+              style="cursor: pointer"
+            >
+              <td>{{ index + 1 }}</td>
+              <td>{{ subscriber.subscriber.name }}</td>
+              <td>{{ subscriber.balance | number : "1.0" }}</td>
+              <td>{{ subscriber.stateName }}</td>
+              <td class="text-end px-2">
+                <svg cIcon name="cilChevronRight"></svg>
               </td>
             </tr>
             } }

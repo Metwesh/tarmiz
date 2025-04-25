@@ -18,6 +18,7 @@ import {
 
 import { IconDirective } from '@coreui/icons-angular';
 import { AuthService } from '../../../services/auth.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-default-header',
@@ -35,6 +36,7 @@ import { AuthService } from '../../../services/auth.service';
     DropdownHeaderDirective,
     DropdownItemDirective,
     DropdownDividerDirective,
+    RouterLink,
   ],
 })
 export class DefaultHeaderComponent extends HeaderComponent {

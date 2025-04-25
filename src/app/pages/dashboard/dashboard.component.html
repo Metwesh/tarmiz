@@ -1,4 +1,76 @@
 <c-row>
+  <c-col md="12" xl="4">
+    <c-widget-stat-f
+      title="Total AUM"
+      class="mb-3"
+      color="success"
+      padding
+      [value]="totalAUM"
+    >
+      <ng-template cTemplateId="widgetIconTemplate">
+        <svg cIcon name="cilChart" size="xl" width="24"></svg>
+      </ng-template>
+      <ng-template cTemplateId="widgetFooterTemplate">
+        <a
+          class="font-weight-bold font-xs text-medium-emphasis"
+          routerLink="/assets/list"
+        >
+          <div class="d-flex align-items-center justify-content-between">
+            <span>View more</span>
+            <svg cIcon name="cilArrowRight" width="16"></svg>
+          </div>
+        </a>
+      </ng-template>
+    </c-widget-stat-f>
+  </c-col>
+  <c-col md="12" xl="4">
+    <c-widget-stat-f
+      title="Asset count"
+      class="mb-3"
+      color="primary"
+      padding
+      [value]="assetCount"
+    >
+      <ng-template cTemplateId="widgetIconTemplate">
+        <svg cIcon name="cilChartPie" size="xl" width="24"></svg>
+      </ng-template>
+      <ng-template cTemplateId="widgetFooterTemplate">
+        <a
+          class="font-weight-bold font-xs text-medium-emphasis"
+          routerLink="/assets/list"
+        >
+          <div class="d-flex align-items-center justify-content-between">
+            <span>View more</span>
+            <svg cIcon name="cilArrowRight" width="16"></svg>
+          </div>
+        </a>
+      </ng-template>
+    </c-widget-stat-f>
+  </c-col>
+  <c-col md="12" xl="4">
+    <c-widget-stat-f
+      title="Users Count"
+      class="mb-3"
+      color="info"
+      padding
+      [value]="userCount"
+    >
+      <ng-template cTemplateId="widgetIconTemplate">
+        <svg cIcon name="cilGraph" size="xl" width="24"></svg>
+      </ng-template>
+      <ng-template cTemplateId="widgetFooterTemplate">
+        <a
+          class="font-weight-bold font-xs text-medium-emphasis"
+          routerLink="/users"
+        >
+          <div class="d-flex align-items-center justify-content-between">
+            <span>View more</span>
+            <svg cIcon name="cilArrowRight" width="16"></svg>
+          </div>
+        </a>
+      </ng-template>
+    </c-widget-stat-f>
+  </c-col>
   <c-col lg="12">
     <c-card class="mb-4">
       <c-card-header class="d-flex align-items-center flex-wrap gap-2">

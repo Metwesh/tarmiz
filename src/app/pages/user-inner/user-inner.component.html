@@ -1,0 +1,114 @@
+<c-container>
+  <!-- Breadcrumb -->
+  <c-row class="justify-content-center">
+    <c-col md="8">
+      <c-breadcrumb>
+        <c-breadcrumb-item
+          routerLink="/users/list"
+          style="cursor: pointer"
+          color="primary"
+        >
+          Users
+        </c-breadcrumb-item>
+        <c-breadcrumb-item active> User Asset Details </c-breadcrumb-item>
+      </c-breadcrumb>
+    </c-col>
+  </c-row>
+
+  <!-- User Asset Details -->
+  <c-row class="justify-content-center">
+    <c-col md="8">
+      <c-card>
+        <c-card-header
+          class="d-flex justify-content-between align-items-center"
+        >
+          <strong> User Asset Details</strong>
+          <c-badge color="primary">
+            @if (isLoading) {
+            <span cPlaceholderAnimation="glow">
+              <span
+                cPlaceholder
+                style="width: 5rem; border-radius: 1rem"
+              ></span>
+            </span>
+            } @else { ID: {{ userId }} }
+          </c-badge>
+        </c-card-header>
+        <c-card-body>
+          <table cTable [hover]="true" [responsive]="true" [striped]="true">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Balance</th>
+                <th>Value</th>
+                <th>State</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (isLoading) { @for (placeholder of [0, 1, 2, 3, 4]; track
+              placeholder) {
+              <tr>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+              </tr>
+              } } @else if (!isLoading && (!subscribers || subscribers.length
+              === 0) ) {
+              <tr style="margin-top: 10rem; margin-bottom: 10rem">
+                <td
+                  style="padding-top: 10rem; padding-bottom: 10rem"
+                  colspan="4"
+                  class="text-center"
+                >
+                  No subscriptions available
+                </td>
+              </tr>
+              } @else { @for (subscriber of subscribers; track subscriber?._id)
+              {
+              <tr>
+                <td>{{ subscriber.asset.symbol }}</td>
+                <td>{{ subscriber.balance | number : "1.2-5" }}</td>
+                <td>{{ subscriber.value | number : "1.2-5" }}</td>
+                <td>{{ subscriber.asset.supplyTypeName }}</td>
+              </tr>
+              } }
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</c-container>

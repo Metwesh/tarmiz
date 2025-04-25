@@ -91,7 +91,7 @@ export class SetAssetStateModalComponent {
       state: +(this.assetStateForm.value.state ?? 0),
     };
 
-    this.http.post('/assets/update/state', apiFormData).subscribe({
+    this.http.post('/issuer/asset/update/state', apiFormData).subscribe({
       next: () => {
         this.submitting = false;
         this.closeModal();

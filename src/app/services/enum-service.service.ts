@@ -76,8 +76,8 @@ export class EnumService {
       if ('countries' in response) {
         data =
           response.countries?.map((country) => ({
-            id: country.code,
-            name: country.nameShort,
+            id: country.countryId,
+            name: country.fullName,
           })) || [];
       } else {
         data = response.sysvars || [];

@@ -19,6 +19,8 @@ import {
   cilCheckCircle,
   cilBellExclamation,
   cilCheckAlt,
+  cilGraph,
+  cilGroup,
 } from '@coreui/icons';
 
 @Component({
@@ -47,6 +49,8 @@ export class AppComponent implements OnInit {
       cilCheckCircle,
       cilBellExclamation,
       cilCheckAlt,
+      cilGraph,
+      cilGroup,
       ...iconSubset,
     };
     this.#colorModeService.localStorageItemName.set(

@@ -31,13 +31,13 @@
               <th class="bg-body-tertiary">
                 <span>Asking Price</span>
                 @if (assets.length > 0) {
-                <span> ({{ assets[0].prices?.[0]?.currencyCode }}) </span>
+                <span> ({{ assets[0].markets?.[0]?.currencyCode }}) </span>
                 }
               </th>
               <th class="bg-body-tertiary">
                 <span>Bidding Price</span>
                 @if (assets.length > 0) {
-                <span> ({{ assets[0].prices?.[0]?.currencyCode }}) </span>
+                <span> ({{ assets[0].markets?.[0]?.currencyCode }}) </span>
                 }
               </th>
               <th class="bg-body-tertiary">State</th>
@@ -132,10 +132,10 @@
               <td>{{ asset.symbol }}</td>
               <td>{{ asset.assetTypeName }}</td>
               <td>
-                {{ (asset.prices?.[0]?.ask ?? 0) | number : '1.2-5' }}
+                {{ (asset.markets?.[0]?.ask ?? 0) | number : '1.2-5' }}
               </td>
               <td>
-                {{ (asset.prices?.[0]?.bid ?? 0) | number : '1.2-5' }}
+                {{ (asset.markets?.[0]?.bid ?? 0) | number : '1.2-5' }}
               </td>
               <td>{{ asset.stateName }}</td>
               <td>

@@ -70,11 +70,44 @@ export const routes: Routes = [
               ).then((m) => m.TransactionListComponent),
           },
           {
-            path: ':address/:id',
+            path: ':id',
             loadComponent: () =>
               import(
                 './pages/transaction-inner/transaction-inner.component'
               ).then((m) => m.TransactionInnerComponent),
+          },
+        ],
+      },
+      {
+        path: 'users',
+        children: [
+          { path: '', redirectTo: 'list', pathMatch: 'full' },
+          {
+            path: 'list',
+            loadComponent: () =>
+              import('./pages/users-list/users-list.component').then(
+                (m) => m.UsersListComponent
+              ),
+          },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./pages/user-inner/user-inner.component').then(
+                (m) => m.UserInnerComponent
+              ),
+          },
+        ],
+      },
+      {
+        path: 'account',
+        children: [
+          { path: '', redirectTo: 'profile', pathMatch: 'full' },
+          {
+            path: 'profile',
+            loadComponent: () =>
+              import('./pages/profile/profile.component').then(
+                (m) => m.ProfileComponent
+              ),
           },
         ],
       },

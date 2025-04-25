@@ -11,6 +11,7 @@ import {
 } from '@coreui/angular';
 import { IAsset } from '../assets-list/asset-list.types';
 import { DecimalPipe } from '@angular/common';
+import { IAssetHolding } from './subscribers-list.types';
 
 @Component({
   selector: 'app-subscribers-list',
@@ -29,14 +30,7 @@ import { DecimalPipe } from '@angular/common';
 })
 export class SubscribersListComponent {
   isLoading = true;
-  subscribers: Array<{
-    contractAddress: string;
-    assetId: number;
-    subscriber: string;
-    balance: number;
-    state: number;
-    stateName: string;
-  }> = [];
+  subscribers: IAssetHolding[] = [];
 
   submitting = false;
 
@@ -50,25 +44,10 @@ export class SubscribersListComponent {
     this.http
       .get<{
         count: number;
-        subscribers: Array<{
-          contractAddress: string;
-          asset: IAsset;
-          subscribers: Array<{
-            subscriber: string;
-            balance: number;
-            state: number;
-            stateName: string;
-          }>;
-        }>;
-      }>('/assets/subscribers/pending')
+        subscribers: IAssetHolding[];
+      }>('/issuer/asset/subscriptions/pending')
       .subscribe(({ subscribers }) => {
-        this.subscribers = subscribers.flatMap((subscriber) =>
-          subscriber.subscribers.map((inner) => ({
-            ...inner,
-            assetId: subscriber.asset.assetId,
-            contractAddress: subscriber.contractAddress,
-          }))
-        );
+        this.subscribers = subscribers;
         this.isLoading = false;
       });
   }
@@ -76,7 +55,7 @@ export class SubscribersListComponent {
   approveSubscriber(args: { assetId: number; subscriber: string }) {
     this.submitting = true;
     this.http
-      .post('/assets/subscription/set', {
+      .post('/issuer/asset/subscription/set', {
         ...args,
         state: 2, // ALWAYS
       })
