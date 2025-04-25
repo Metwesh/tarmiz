@@ -93,6 +93,13 @@
         >
           <c-spinner />
         </div>
+        } @else if (barChartEmpty) {
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="height: 18.75rem"
+        >
+          <p>No data for this asset</p>
+        </div>
         } @else {
         <c-chart
           [type]="priceHistory.length === 1 ? 'bar' : 'line'"
@@ -118,6 +125,13 @@
           <c-spinner />
         </div>
 
+        } @else if (doughnutChartEmpty) {
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="height: 16.75rem"
+        >
+          <p>No data found</p>
+        </div>
         } @else {
         <c-chart
           type="doughnut"
@@ -138,6 +152,13 @@
           style="height: 16.75rem"
         >
           <c-spinner />
+        </div>
+        } @else if (pieChartEmpty) {
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="height: 16.75rem"
+        >
+          <p>No data found</p>
         </div>
         } @else {
         <c-chart type="pie" [data]="chartPieData" [options]="options" />

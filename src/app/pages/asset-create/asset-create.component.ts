@@ -57,6 +57,7 @@ export class AssetCreateComponent implements OnInit {
     pricingModel: FormControl<string | null>;
     tradingModel: FormControl<string | null>;
     executionModel: FormControl<string | null>;
+    paymentModel: FormControl<string | null>;
     cid: FormControl<string | null>;
     marketId: FormControl<string | null>;
     level: FormControl<string | null>;
@@ -66,13 +67,14 @@ export class AssetCreateComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
 
-  assetTypeUrl = SYSTEM_ENUMS.ASSET_TYPE;
-  pricingModelUrl = SYSTEM_ENUMS.PRICING_MODEL;
-  supplyTypesUrl = SYSTEM_ENUMS.SUPPLY_TYPES;
-  accountLevelUrl = SYSTEM_ENUMS.ACCOUNT_LEVEL;
-  tradingModelUrl = SYSTEM_ENUMS.TRADING_MODEL;
-  executionModelUrl = SYSTEM_ENUMS.EXECUTION_MODEL;
-  marketUrl = SYSTEM_ENUMS.MARKET;
+  assetTypeKey = SYSTEM_ENUMS.ASSET_TYPE;
+  pricingModelKey = SYSTEM_ENUMS.PRICING_MODEL;
+  supplyTypesKey = SYSTEM_ENUMS.SUPPLY_TYPES;
+  accountLevelKey = SYSTEM_ENUMS.ACCOUNT_LEVEL;
+  tradingModelKey = SYSTEM_ENUMS.TRADING_MODEL;
+  paymentModelKey = SYSTEM_ENUMS.PAYMENT_MODEL;
+  executionModelKey = SYSTEM_ENUMS.EXECUTION_MODEL;
+  marketKey = SYSTEM_ENUMS.MARKET;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.assetForm = this.fb.group({
@@ -85,6 +87,7 @@ export class AssetCreateComponent implements OnInit {
       pricingModel: ['', [Validators.required]],
       tradingModel: ['', [Validators.required]],
       executionModel: ['', [Validators.required]],
+      paymentModel: ['', [Validators.required]],
       cid: [''],
       marketId: ['', [Validators.required]],
       level: ['', [Validators.required]],

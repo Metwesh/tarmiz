@@ -45,7 +45,7 @@ export class AssetsListComponent implements OnInit {
 
   ngOnInit() {
     this.http
-      .get<{ count: number; assets: IAsset[] }>('/asset/list')
+      .get<{ count: number; assets: IAsset[] }>('/issuer/assets/list')
       .subscribe({
         next: ({ assets }) => {
           this.assets = assets;

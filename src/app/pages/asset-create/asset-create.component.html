@@ -66,7 +66,7 @@
         <!-- Asset Type -->
         <c-col>
           <app-async-select
-            [key]="assetTypeUrl"
+            [key]="assetTypeKey"
             [control]="assetForm.controls['assetType']"
             controlName="assetType"
             label="Asset Type"
@@ -77,7 +77,7 @@
         <!-- Supply Type -->
         <c-col>
           <app-async-select
-            [key]="supplyTypesUrl"
+            [key]="supplyTypesKey"
             [control]="assetForm.controls['supplyType']"
             controlName="supplyType"
             label="Supply Type"
@@ -117,7 +117,7 @@
         <!-- Pricing Model -->
         <c-col>
           <app-async-select
-            [key]="pricingModelUrl"
+            [key]="pricingModelKey"
             [control]="assetForm.controls['pricingModel']"
             controlName="pricingModel"
             label="Pricing Model"
@@ -128,7 +128,7 @@
         <!-- Trading Model -->
         <c-col>
           <app-async-select
-            [key]="tradingModelUrl"
+            [key]="tradingModelKey"
             [control]="assetForm.controls['tradingModel']"
             controlName="tradingModel"
             label="Trading Model"
@@ -139,7 +139,7 @@
         <!-- Execution Model -->
         <c-col>
           <app-async-select
-            [key]="executionModelUrl"
+            [key]="executionModelKey"
             [control]="assetForm.controls['executionModel']"
             controlName="executionModel"
             label="Execution Model"
@@ -147,10 +147,21 @@
           />
         </c-col>
 
+        <!-- Payment Model -->
+        <c-col>
+          <app-async-select
+            [key]="paymentModelKey"
+            [control]="assetForm.controls['paymentModel']"
+            controlName="paymentModel"
+            label="Payment Model"
+            placeholder="Choose payment model"
+          />
+        </c-col>
+
         <!-- Market ID -->
         <c-col>
           <app-async-select
-            [key]="marketUrl"
+            [key]="marketKey"
             [control]="assetForm.controls['marketId']"
             controlName="marketId"
             label="Market"
@@ -162,7 +173,7 @@
         <!-- Account Level -->
         <c-col>
           <app-async-select
-            [key]="accountLevelUrl"
+            [key]="accountLevelKey"
             [control]="assetForm.controls['level']"
             controlName="level"
             label="Account Level"

@@ -26,13 +26,13 @@
               <th class="bg-body-tertiary">Address</th>
               <th class="bg-body-tertiary">Tokens</th>
               <th class="bg-body-tertiary">
-                Price 
+                Price
                 <!-- @if (transactions.length > 0) { ({{
                   transactions[0].asset.markets[0].currencyCode
                 }}) } -->
               </th>
               <th class="bg-body-tertiary">
-                Value 
+                Value
                 <!-- @if (transactions.length > 0) { ({{
                   transactions[0].asset.markets[0].currencyCode
                 }}) } -->
@@ -130,10 +130,7 @@
             } @else { @for (transaction of transactions; track
             transaction.transferId; let i = $index) {
             <tr
-              [routerLink]="[
-                '/transactions',
-                transaction.transferId
-              ]"
+              [routerLink]="['/transactions', transaction.transferId]"
               style="cursor: pointer"
             >
               <td>{{ transaction.time * 1000 | date : "short" }}</td>
@@ -162,7 +159,9 @@
                 {{ transaction.tokens * transaction.price | number : "1.2-5" }}
               </td>
               <td>
-                <svg cIcon name="cilChevronRight"></svg>
+                <div class="d-flex align-items-center justify-content-end px-2">
+                  <svg cIcon name="cilChevronRight" style="width: 1rem"></svg>
+                </div>
               </td>
             </tr>
             } }

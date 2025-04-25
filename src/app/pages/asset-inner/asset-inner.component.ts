@@ -114,7 +114,7 @@ export class AssetInnerComponent implements OnInit {
       return;
     }
 
-    this.http.get<IAsset>(`/asset/info/${assetId}`).subscribe({
+    this.http.get<IAsset>(`/issuer/asset/info/${assetId}`).subscribe({
       next: (asset) => {
         this.asset = asset;
         this.isAssetLoading = false;
@@ -183,7 +183,7 @@ export class AssetInnerComponent implements OnInit {
   }
 
   toggleAssetStateModal(state: number | undefined) {
-    if (!state) return;
+    if (state === undefined) return;
     this.assetState = state;
     this.openAssetStateModal();
   }

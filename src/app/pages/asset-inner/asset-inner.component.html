@@ -345,7 +345,7 @@
               <tr style="margin-top: 10rem; margin-bottom: 10rem">
                 <td
                   style="padding-top: 10rem; padding-bottom: 10rem"
-                  colspan="4"
+                  colspan="6"
                   class="text-center"
                 >
                   No prices available
@@ -474,7 +474,9 @@
               subscriber.subscriber; let index = $index) {
               <tr>
                 <td>{{ index + 1 }}</td>
-                <td>{{ subscriber.subscriber.name }}</td>
+                <td>
+                  <code>{{ subscriber.subscriber.address }}</code>
+                </td>
                 <td>{{ subscriber.balance | number : "1.0" }}</td>
                 <td>{{ subscriber.stateName }}</td>
               </tr>

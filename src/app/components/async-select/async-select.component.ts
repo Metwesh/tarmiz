@@ -9,7 +9,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FormSelectDirective } from '@coreui/angular';
 import { SelectOption } from '../../@types/generic';
 import { SYSTEM_ENUMS } from '../../constants/enums';
-import { EnumService } from '../../services/enum-service.service';
+import { EnumService } from '../../services/enum.service';
 
 @Component({
   selector: 'app-async-select',

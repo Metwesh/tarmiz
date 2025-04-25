@@ -25,6 +25,7 @@ export class EnumService {
     [SYSTEM_ENUMS.TRADING_MODEL]: new BehaviorSubject<EnumMapping>({}),
     [SYSTEM_ENUMS.EXECUTION_MODEL]: new BehaviorSubject<EnumMapping>({}),
     [SYSTEM_ENUMS.MARKET]: new BehaviorSubject<EnumMapping>({}),
+    [SYSTEM_ENUMS.PAYMENT_MODEL]: new BehaviorSubject<EnumMapping>({}),
   };
 
   private cache: Record<string, EnumMapping> = {}; // In-memory cache
@@ -79,7 +80,7 @@ export class EnumService {
         data =
           response.countries?.map((country) => ({
             id: country.countryId,
-            name: country.fullName,
+            name: country.shortName,
           })) || [];
       } else {
         data = response.sysvars
@@ -172,6 +173,10 @@ export class EnumService {
       [SYSTEM_ENUMS.MARKET]: {
         818: 'Egypt',
         682: 'Saudi Arabia',
+      },
+      [SYSTEM_ENUMS.PAYMENT_MODEL]: {
+        1: 'OnChain',
+        2: 'OffChain',
       },
     };
 

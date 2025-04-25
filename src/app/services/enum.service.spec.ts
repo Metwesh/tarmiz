@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EnumServiceService } from './enum-service.service';
+import { EnumService } from './enum.service';
 
 describe('EnumServiceService', () => {
-  let service: EnumServiceService;
+  let service: EnumService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(EnumServiceService);
+    service = TestBed.inject(EnumService);
   });
 
   it('should be created', () => {

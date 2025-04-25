@@ -8,6 +8,7 @@ export const SYSTEM_ENUMS = {
   TRADING_MODEL: 'tradingModel',
   MARKET: 'market',
   EXECUTION_MODEL: 'executionModel',
+  PAYMENT_MODEL: 'paymentModel',
 } as const;
 
 export const SYSTEM_ENUMS_MAP = {
@@ -20,4 +21,5 @@ export const SYSTEM_ENUMS_MAP = {
   [SYSTEM_ENUMS.TRADING_MODEL]: '/general/sysvars/Asset%20Trading%20Model',
   [SYSTEM_ENUMS.EXECUTION_MODEL]: '/general/sysvars/Asset%20Execution%20Model',
   [SYSTEM_ENUMS.MARKET]: '/general/countries/list',
+  [SYSTEM_ENUMS.PAYMENT_MODEL]: '/general/sysvars/Asset%20Payment%20Model',
 } as const;

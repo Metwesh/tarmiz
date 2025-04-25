@@ -67,6 +67,11 @@ export class DashboardComponent implements OnInit {
   chartPieData: ChartData = { labels: [], datasets: [] };
   chartDoughnutData: ChartData = { labels: [], datasets: [] };
 
+  // chart empty
+  barChartEmpty = false;
+  pieChartEmpty = false;
+  doughnutChartEmpty = false;
+
   private _selectedAssetId = '';
 
   constructor(private http: HttpClient, private datePipe: DatePipe) {}
@@ -83,7 +88,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.http
-      .get<{ count: number; assets: IAsset[] }>('/asset/list')
+      .get<{ count: number; assets: IAsset[] }>('/issuer/assets/list')
       .subscribe({
         next: ({ count, assets }) => {
           this.assetCount = count;
@@ -180,6 +185,10 @@ export class DashboardComponent implements OnInit {
         },
       ],
     };
+    this.barChartEmpty = [
+      this.priceHistory.map((item) => item.bid),
+      this.priceHistory.map((item) => item.ask),
+    ].every((dataset) => dataset.length === 0);
   }
 
   updateCharts() {
@@ -206,6 +215,10 @@ export class DashboardComponent implements OnInit {
       ],
     };
 
+    this.pieChartEmpty = Array.from(assetTypeMap.values()).every(
+      (value) => value === 0
+    );
+
     // 🍩 Doughnut Chart: Asset State Distribution
     const assetStateMap = new Map<string, number>();
     this.assets.forEach((asset) => {
@@ -226,5 +239,9 @@ export class DashboardComponent implements OnInit {
         },
       ],
     };
+
+    this.doughnutChartEmpty = Array.from(assetStateMap.values()).every(
+      (value) => value === 0
+    );
   }
 }

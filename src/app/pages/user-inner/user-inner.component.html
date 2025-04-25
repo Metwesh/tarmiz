@@ -1,7 +1,7 @@
 <c-container>
   <!-- Breadcrumb -->
   <c-row class="justify-content-center">
-    <c-col md="8">
+    <c-col md="10">
       <c-breadcrumb>
         <c-breadcrumb-item
           routerLink="/users/list"
@@ -10,21 +10,21 @@
         >
           Users
         </c-breadcrumb-item>
-        <c-breadcrumb-item active> User Asset Details </c-breadcrumb-item>
+        <c-breadcrumb-item active> User Details </c-breadcrumb-item>
       </c-breadcrumb>
     </c-col>
   </c-row>
 
   <!-- User Asset Details -->
-  <c-row class="justify-content-center">
-    <c-col md="8">
+  <c-row class="justify-content-center mb-4">
+    <c-col md="10">
       <c-card>
         <c-card-header
           class="d-flex justify-content-between align-items-center"
         >
           <strong> User Asset Details</strong>
           <c-badge color="primary">
-            @if (isLoading) {
+            @if (usersIsLoading) {
             <span cPlaceholderAnimation="glow">
               <span
                 cPlaceholder
@@ -38,14 +38,15 @@
           <table cTable [hover]="true" [responsive]="true" [striped]="true">
             <thead>
               <tr>
-                <th>Symbol</th>
-                <th>Balance</th>
-                <th>Value</th>
-                <th>State</th>
+                <th class="bg-body-tertiary">Symbol</th>
+                <th class="bg-body-tertiary">Balance</th>
+                <th class="bg-body-tertiary">Value</th>
+                <th class="bg-body-tertiary">State</th>
+                <th class="bg-body-tertiary"></th>
               </tr>
             </thead>
             <tbody>
-              @if (isLoading) { @for (placeholder of [0, 1, 2, 3, 4]; track
+              @if (usersIsLoading) { @for (placeholder of [0, 1, 2, 3, 4]; track
               placeholder) {
               <tr>
                 <td>
@@ -84,9 +85,18 @@
                     ></span>
                   </p>
                 </td>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
               </tr>
-              } } @else if (!isLoading && (!subscribers || subscribers.length
-              === 0) ) {
+              } } @else if (!usersIsLoading && (!subscribers ||
+              subscribers.length === 0) ) {
               <tr style="margin-top: 10rem; margin-bottom: 10rem">
                 <td
                   style="padding-top: 10rem; padding-bottom: 10rem"
@@ -98,11 +108,27 @@
               </tr>
               } @else { @for (subscriber of subscribers; track subscriber?._id)
               {
-              <tr>
+              <tr
+                (click)="onSubscriberClick(subscriber)"
+                [attr.role]="
+                  !selectedAsset || selectedAsset !== subscriber.assetId
+                    ? 'button'
+                    : undefined
+                "
+              >
                 <td>{{ subscriber.asset.symbol }}</td>
                 <td>{{ subscriber.balance | number : "1.2-5" }}</td>
                 <td>{{ subscriber.value | number : "1.2-5" }}</td>
                 <td>{{ subscriber.asset.supplyTypeName }}</td>
+                <td class="d-flex items-center justify-content-end">
+                  <button
+                    cButton
+                    size="sm"
+                    [disabled]="selectedAsset === subscriber.assetId"
+                  >
+                    View transactions
+                  </button>
+                </td>
               </tr>
               } }
             </tbody>
@@ -111,4 +137,186 @@
       </c-card>
     </c-col>
   </c-row>
+
+  <!-- User Transaction Details -->
+  @if (selectedAsset){
+  <c-row class="justify-content-center mb-4">
+    <c-col md="10">
+      <c-card>
+        <c-card-header
+          class="d-flex justify-content-between align-items-center"
+        >
+          <strong> Asset Transaction Details</strong>
+          <c-badge color="primary">
+            @if (transactionsIsLoading) {
+            <span cPlaceholderAnimation="glow">
+              <span
+                cPlaceholder
+                style="width: 5rem; border-radius: 1rem"
+              ></span>
+            </span>
+            } @else { ID: {{ selectedAsset }} }
+          </c-badge>
+        </c-card-header>
+        <c-card-body>
+          <table cTable [hover]="true" [responsive]="true" [striped]="true">
+            <thead class="text-nowrap text-truncate">
+              <tr>
+                <th class="bg-body-tertiary">Time</th>
+                <th class="bg-body-tertiary">Symbol</th>
+                <th class="bg-body-tertiary">Type</th>
+                <th class="bg-body-tertiary">Address</th>
+                <th class="bg-body-tertiary">Tokens</th>
+                <th class="bg-body-tertiary">
+                  Price
+                  <!-- @if (transactions.length > 0) { ({{
+                    transactions[0].asset.markets[0].currencyCode
+                  }}) } -->
+                </th>
+                <th class="bg-body-tertiary">
+                  Value
+                  <!-- @if (transactions.length > 0) { ({{
+                    transactions[0].asset.markets[0].currencyCode
+                  }}) } -->
+                </th>
+                <th class="bg-body-tertiary"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (transactionsIsLoading) { @for (placeholder of [0, 1, 2, 3,
+              4]; track placeholder) {
+              <tr>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+                <td>
+                  <p cPlaceholderAnimation="glow" style="margin: 0">
+                    <span
+                      cCol="12"
+                      cPlaceholder
+                      style="border-radius: 1rem; width: 100%"
+                    ></span>
+                  </p>
+                </td>
+              </tr>
+              } } @else if (!transactionsIsLoading && transactions.length === 0
+              ) {
+              <tr>
+                <td
+                  style="padding-top: 10rem; padding-bottom: 10rem"
+                  colspan="8"
+                  class="text-center"
+                >
+                  No transactions available
+                </td>
+              </tr>
+              } @else { @for (transaction of transactions; track
+              transaction.transferId; let i = $index) {
+              <tr
+                [routerLink]="['/transactions', transaction.transferId]"
+                style="cursor: pointer"
+              >
+                <td>{{ transaction.time * 1000 | date : "short" }}</td>
+                <td>{{ transaction.asset.symbol }}</td>
+                <td
+                  [class]="{
+                      'text-primary': transaction.action === 'Buy',
+                    }"
+                >
+                  {{ transaction.action }}
+                </td>
+                <td>
+                  <code>
+                    {{
+                      contractAddress === transaction.from
+                        ? transaction.to
+                        : transaction.from
+                    }}
+                  </code>
+                </td>
+                <td>{{ transaction.tokens }}</td>
+                <td>
+                  {{ transaction.price | number : "1.2-5" }}
+                </td>
+                <td>
+                  {{
+                    transaction.tokens * transaction.price | number : "1.2-5"
+                  }}
+                </td>
+                <td>
+                  <div
+                    class="d-flex align-items-center justify-content-end px-2"
+                  >
+                    <svg cIcon name="cilChevronRight" style="width: 1rem"></svg>
+                  </div>
+                </td>
+              </tr>
+              } }
+            </tbody>
+          </table>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+  }
 </c-container>
