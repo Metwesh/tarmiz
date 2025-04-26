@@ -81,8 +81,8 @@ export class PriceSetModalComponent {
 
   constructor(private formBuilder: FormBuilder, private http: HttpClient) {
     this.priceSetForm = this.formBuilder.group({
-      bid: [0, [Validators.required, Validators.min(0)]],
-      ask: [0, [Validators.required, Validators.min(0)]],
+      bid: [0, [Validators.required, Validators.min(0.00000000001)]],
+      ask: [0, [Validators.required, Validators.min(0.00000000001)]],
     });
   }
 

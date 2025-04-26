@@ -39,9 +39,12 @@
               }"
             />
             @if (priceSetForm.controls['bid'].invalid &&
-            priceSetForm.controls['bid'].touched) {
+            priceSetForm.controls['bid'].touched) { @if
+            (priceSetForm.controls['bid'].errors?.['required']) {
             <div class="text-danger">Bid price is required</div>
-            }
+            } @else if (priceSetForm.controls['bid'].errors?.['min']) {
+            <div class="text-danger">Bid price must be greater than 0</div>
+            } }
           </div>
         </c-col>
 
@@ -60,9 +63,12 @@
               }"
             />
             @if (priceSetForm.controls['ask'].invalid &&
-            priceSetForm.controls['ask'].touched) {
+            priceSetForm.controls['ask'].touched) { @if
+            (priceSetForm.controls['ask'].errors?.['required']) {
             <div class="text-danger">Ask price is required</div>
-            }
+            } @else if (priceSetForm.controls['ask'].errors?.['min']) {
+            <div class="text-danger">Ask price must be greater than 0</div>
+            } }
           </div>
         </c-col>
       </c-row>

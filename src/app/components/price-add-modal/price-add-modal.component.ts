@@ -84,8 +84,8 @@ export class PriceAddModalComponent {
 
     this.priceAddForm = this.formBuilder.group({
       marketId: ['', [Validators.required, Validators.min(0)]],
-      bid: [0, [Validators.required, Validators.min(1)]],
-      ask: [0, [Validators.required, Validators.min(1)]],
+      bid: [0, [Validators.required, Validators.min(0.00000000001)]],
+      ask: [0, [Validators.required, Validators.min(0.00000000001)]],
     });
   }
 
